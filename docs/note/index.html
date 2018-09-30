@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Ken Wakita (https://is-prg1b.github.io/lecture/)" />
+  <title>プログラミング第一</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <script src="//use.edgefonts.net/source-code-pro.js"></script>
+  <script type="text/javascript" src="/lecture/lib/reveal.js-3.5.0/plugin/highlight/highlight.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <link rel="stylesheet" type="text/css" href="/lecture/lib/reveal.js-3.5.0/css/theme/solarized.css">
+  <link rel="stylesheet" type="text/css" href="/lecture/lib/kw.css">
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">プログラミング第一</h1>
+<p class="author">Ken Wakita (<a href="https://is-prg1b.github.io/lecture/">https://is-prg1b.github.io/lecture/</a>)</p>
+</header>
+<p><a href="/lecture/note/">トップページへ</a></p>
+<hr />
+<h1 id="講義資料等">講義資料等</h1>
+<ul>
+<li>10月1日 – <a href="https://github.com/y18-prg1/lecture/raw/master/slide/day01.pdf">講義資料</a> / サンプルコード (sbt project: <code>lx01</code>) / <a href="/lecture/note/lx01-makefile.html">makeとMakefile</a> / <strong>次回小テスト</strong></li>
+</ul>
+<!--
+- 9月26日 --- [講義資料](https://github.com/y18-prg1/lecture/raw/master/slide/day01.pdf) / サンプルコード (sbt project: `lx01`) / [makeとMakefile](/lecture/note/lx01-makefile.html) / **次回小テスト**
+
+- 9月29日 --- [講義資料](/lecture/slide/lx02.html) / サンプルコード (sbt projects: `lx02a` -- `lx02k`) / [テスト実行のログ](/lecture/note/lx02-tests.html) / [小テスト](/lecture/quiz/quiz01.html)
+
+- 10月2日 --- [講義資料](https://github.com/y18-prg1/lecture/raw/master/slide/day03.pdf) / サンプルコード (sbt project: `lx03`) / 次回小テスト
+
+- 10月13日 --- [講義資料](https://github.com/y18-prg1/lecture/raw/master/slide/day04.pdf) / サンプルコード (sbt project: `lx04`)
+
+- 10月17日 --- [講義資料](https://github.com/y18-prg1/lecture/raw/master/slide/day05.pdf) / サンプルコード (sbt project: `lx05`)
+
+- 10月20日 --- [講義資料](https://github.com/y18-prg1/lecture/raw/master/slide/day06.pdf) / サンプルコード (sbt project: `lx06`)
+
+- 10月24日 --- [講義資料](https://github.com/y18-prg1/lecture/raw/master/slide/day07.pdf) / サンプルコード (sbt project: `lx07`)
+
+- 10月27日 --- [講義資料](/lecture/slide/day08.html) / サンプルコード (sbt project: `lx08`)
+
+- 11月3日 --- [講義資料](https://github.com/y18-prg1/lecture/raw/master/slide/day09.pdf) / サンプルコード (sbt project: `lx09`)
+
+- 11月7日 --- [講義資料](/lecture/slide/day10.html) / サンプルコード (sbt project: `lx09`)
+
+- 11月10日 --- [講義資料](/lecture/slide/day11.html) / サンプルコード (sbt project: `lx11`)
+
+- 11月14日 --- [講義資料](/lecture/slide/day12.html) / サンプルコード (sbt project: `lx12`)
+-->
+<h1 id="講義内容についての質問など">講義内容についての質問など</h1>
+<p><a href="https://github.com/y18-prg1/lecture/issues/new">質問，疑問等の受け付け先</a>．受け付けた質問は教員，TA，履修生で共有されます．これ以外の人々には公開されません．</p>
+<p>少ないスタッフで大勢を教育する都合上，質問，疑問，それへの対応は可能な限り共有する方針としています．羞恥心などの理由から授業や課題に直接関連する質問を<strong>メールで送付しないで</strong>下さい．以下に issue で対応したい問い合わせ例を示します．</p>
+<ul>
+<li><p>講義資料 <code>***.pdf</code> の X ページの説明は間違っていませんか</p></li>
+<li><p>講義資料 <code>***.pdf</code> の Y ページの説明がわかりません．</p></li>
+<li><p><code>lx??</code> リポジトリに含まれるサンプルコード <code>***.scala</code> を実行しようとしたが動きません</p></li>
+<li><p>自宅のパソコンに <code>sbt</code> をインストールしたが動きません</p></li>
+<li><p>講義資料 <code>***</code> を応用して，＊＊＊なことをやってみたいが，＊＊＊がわからない．ヒントを下さい．</p></li>
+</ul>
+<dl>
+<dt>以下のような例</dt>
+<dd><p>授業や課題の内容に直接関わらない相談については脇田＆森へのメールでお願いします．</p>
+<ul>
+<li>病気のため休学することになったので特別な配慮をして欲しい</li>
+</ul>
+</dd>
+</dl>
+<h1 id="gitリポジトリの初期化">Gitリポジトリの初期化</h1>
+<p>以下の要領で<code>git</code>コマンドを実行するとGitHub上のリポジトリを複製できます．</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode bash src"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="fu">git</span> clone git@github.com:y18-prg1/lecture</a></code></pre></div>
+<p>GitHubのデータが更新された場合は，適宜 <code>git pull</code> して下さい．最新版に更新できます．</p>
+<p>GitHubから複製したデータを直接変更すると <code>git pull</code> のときにエラーが出ます．</p>
+<hr />
+<p><a href="/lecture/note/">トップページへ</a></p>
+</body>
+</html>
