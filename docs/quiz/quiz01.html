@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Ken Wakita (https://wakita.github.io/y18-prg1/)" />
+  <title>小テスト１ 学籍番号： 氏名：</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { font-weight: bold; } /* Alert */
+code span.an { font-style: italic; } /* Annotation */
+code span.cf { font-weight: bold; } /* ControlFlow */
+code span.co { font-style: italic; } /* Comment */
+code span.cv { font-style: italic; } /* CommentVar */
+code span.do { font-style: italic; } /* Documentation */
+code span.dt { text-decoration: underline; } /* DataType */
+code span.er { font-weight: bold; } /* Error */
+code span.in { font-style: italic; } /* Information */
+code span.kw { font-weight: bold; } /* Keyword */
+code span.pp { font-weight: bold; } /* Preprocessor */
+code span.wa { font-style: italic; } /* Warning */
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <script src="//use.edgefonts.net/source-code-pro.js"></script>
+  <link rel="stylesheet" type="text/css" href="/lib/reveal.js/css/theme/solarized.css">
+  <link rel="stylesheet" type="text/css" href="/lib/kw.css">
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">小テスト１<br/>学籍番号：<br/>氏名：</h1>
+<p class="author">Ken Wakita (<a href="https://wakita.github.io/y18-prg1/">https://wakita.github.io/y18-prg1/</a>)</p>
+</header>
+<p>あるフォルダに Makefile, simple.c, simple.scala のみがあるものとする．Makefileの内容は以下であり，simple.c, simple.scalaはそれぞれCとScalaで記述された，文法に沿って正しく記述され，意味のあるプログラムとする．</p>
+<div class="sourceCode" id="lx01-makefile"><pre class="sourceCode numberSource makefile src numberLines"><code class="sourceCode makefile"><a class="sourceLine" id="lx01-makefile-1" data-line-number="1"><span class="dv">all:</span><span class="dt"> simple Simple.class</span></a>
+<a class="sourceLine" id="lx01-makefile-2" data-line-number="2"></a>
+<a class="sourceLine" id="lx01-makefile-3" data-line-number="3"><span class="dv">simple:</span><span class="dt"> simple.c</span></a>
+<a class="sourceLine" id="lx01-makefile-4" data-line-number="4">    clang -o simple simple.c</a>
+<a class="sourceLine" id="lx01-makefile-5" data-line-number="5"></a>
+<a class="sourceLine" id="lx01-makefile-6" data-line-number="6"><span class="dv">Simple.class:</span><span class="dt"> simple.scala</span></a>
+<a class="sourceLine" id="lx01-makefile-7" data-line-number="7">    scalac simple.scala</a>
+<a class="sourceLine" id="lx01-makefile-8" data-line-number="8"></a>
+<a class="sourceLine" id="lx01-makefile-9" data-line-number="9"><span class="dv">clean:</span></a>
+<a class="sourceLine" id="lx01-makefile-10" data-line-number="10">    rm -f simple simple.s *.class</a>
+<a class="sourceLine" id="lx01-makefile-11" data-line-number="11"></a>
+<a class="sourceLine" id="lx01-makefile-12" data-line-number="12"><span class="dv">run-c:</span><span class="dt"> ./simple</span></a>
+<a class="sourceLine" id="lx01-makefile-13" data-line-number="13">    ./simple</a></code></pre></div>
+<div class="quiz">
+<ol type="1">
+<li><p>まず，<code>make simple</code> を実行した．このコマンド実行によって新規生成されるファイルの名前とそのファイルの働きを簡潔に説明しなさい．</p></li>
+<li><p>つぎに <code>make</code> を実行した．このコマンド実行によって新規生成されるファイルの名前とそのファイルの働きを簡潔に説明しなさい．</p></li>
+<li><p>再度 <code>make</code> を実行した．このコマンド実行によって新規生成されるファイルの名前とそのファイルの働きを簡潔に説明しなさい．</p></li>
+<li><p><code>simple.c</code> を修正した．修正後の <code>simple.c</code> は文法的に正しいものとする．ここで <code>make</code> を実行したときに新規生成されるファイルの内容とそのファイルの働きを簡潔に説明しなさい．</p></li>
+<li><p>上の <code>Makefile</code> には <code>simple.c</code> のプログラムを実行するための <code>run-c</code> 規則は書かれている．<code>simple.scala</code> の実行に相当するものはないので，それを <code>run-s</code> 規則として記述しなさい．</p></li>
+<li><p><code>make clean</code> を実行した．このコマンドの実行後にフォルダに残っているファイル名を列挙しなさい．</p></li>
+</ol>
+</div>
+</body>
+</html>
