@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Ken Wakita (https://is-prg1b.github.io/lecture/)" />
+  <title>lx02 のテスト実行結果</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <script src="//use.edgefonts.net/source-code-pro.js"></script>
+  <script type="text/javascript" src="/lecture/lib/reveal.js-3.5.0/plugin/highlight/highlight.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <link rel="stylesheet" type="text/css" href="/lecture/lib/reveal.js-3.5.0/css/theme/solarized.css">
+  <link rel="stylesheet" type="text/css" href="/lecture/lib/kw.css">
+</head>
+<body>
+<header id="title-block-header">
+<h1 class="title">lx02 のテスト実行結果</h1>
+<p class="author">Ken Wakita (<a href="https://is-prg1b.github.io/lecture/">https://is-prg1b.github.io/lecture/</a>)</p>
+<p class="date">2017年9月29日</p>
+</header>
+<p><a href="/lecture/note/">トップページへ</a></p>
+<hr />
+<note>
+<h1 id="lx02a">lx02a</h1>
+<pre class="log"><code>sbt:lx02a&gt; test
+[info] LeapYearTest:
+[info] ScalaTest
+[info] Run completed in 56 milliseconds.
+[info] Total number of tests run: 0
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 0, failed 0, canceled 0, ignored 0, pending 0
+[info] No tests were executed.
+[info] Passed: Total 0, Failed 0, Errors 0, Passed 0
+[success] Total time: 0 s, completed Sep 29, 2017 12:16:25 PM</code></pre>
+<h1 id="lx02b">lx02b</h1>
+<pre class="log"><code>sbt:lx02a&gt; project lx02b
+[info] Set current project to lx02b (in build file:/Users/wakita/Dropbox/projects/prg/lecture/)
+sbt:lx02b&gt; test
+[info] LeapYearTest:
+[info] ScalaTest
+[info] Run completed in 63 milliseconds.
+[info] Total number of tests run: 0
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 0, failed 0, canceled 0, ignored 0, pending 0
+[info] No tests were executed.
+[info] Passed: Total 0, Failed 0, Errors 0, Passed 0
+[success] Total time: 0 s, completed Sep 29, 2017 12:16:59 PM</code></pre>
+<h1 id="lx02c">lx02c</h1>
+<pre class="log"><code>sbt:lx02b&gt; project lx02c
+[info] Set current project to lx02c (in build file:/Users/wakita/Dropbox/projects/prg/lecture/)
+sbt:lx02c&gt; test
+[info] LeapYearTest:
+[info] 4で割り切れる年
+[info] - should 閏年である
+[info] ScalaTest
+[info] Run completed in 101 milliseconds.
+[info] Total number of tests run: 1
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 1, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] Passed: Total 1, Failed 0, Errors 0, Passed 1
+[success] Total time: 0 s, completed Sep 29, 2017 12:17:22 PM</code></pre>
+<h1 id="lx02d">lx02d</h1>
+<pre class="log"><code>sbt:lx02d&gt; test
+[info] LeapYearTest:
+[info] 4で割り切れる年
+[info] - should 閏年である
+[info] 4で割り切れない年
+[info] - should 閏年でない *** FAILED ***
+[info]   true did not equal false (leapyear.scala:13)
+[info] ScalaTest
+[info] Run completed in 95 milliseconds.
+[info] Total number of tests run: 2
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 1, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Failed: Total 2, Failed 1, Errors 0, Passed 1
+[error] Failed tests:
+[error]     LeapYearTest
+[error] (lx02d/test:test) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 0 s, completed Sep 29, 2017 12:43:53 PM</code></pre>
+<h1 id="lx02e">lx02e</h1>
+<pre class="log"><code>sbt:lx02d&gt; project lx02e
+[info] Set current project to lx02e (in build file:/Users/wakita/Dropbox/projects/prg/lecture/)
+sbt:lx02e&gt; test
+[info] Updating {file:/Users/wakita/Dropbox/projects/prg/lecture/}lx02e...
+[info] Done updating.
+[info] Compiling 1 Scala source to /Users/wakita/tmp/sbt/prg1b/lx02e/scala-2.12/classes ...
+[info] Done compiling.
+[info] Compiling 1 Scala source to /Users/wakita/tmp/sbt/prg1b/lx02e/scala-2.12/test-classes ...
+[info] Done compiling.
+[info] LeapYearTest:
+[info] 4で割り切れる年
+[info] - should 閏年である *** FAILED ***
+[info]   false did not equal true (leapyear.scala:8)
+[info] 4で割り切れない年
+[info] - should 閏年でない
+[info] ScalaTest
+[info] Run completed in 141 milliseconds.
+[info] Total number of tests run: 2
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 1, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Failed: Total 2, Failed 1, Errors 0, Passed 1
+[error] Failed tests:
+[error]     LeapYearTest
+[error] (lx02e/test:test) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 1 s, completed Sep 29, 2017 12:18:17 PM</code></pre>
+<h1 id="lx02f">lx02f</h1>
+<pre class="log"><code>sbt:lx02e&gt; project lx02f
+[info] Set current project to lx02f (in build file:/Users/wakita/Dropbox/projects/prg/lecture/)
+sbt:lx02f&gt; test
+[info] Updating {file:/Users/wakita/Dropbox/projects/prg/lecture/}lx02f...
+[info] Done updating.
+[info] Compiling 1 Scala source to /Users/wakita/tmp/sbt/prg1b/lx02f/scala-2.12/classes ...
+[info] Done compiling.
+[info] Compiling 1 Scala source to /Users/wakita/tmp/sbt/prg1b/lx02f/scala-2.12/test-classes ...
+[info] Done compiling.
+[info] LeapYearTest:
+[info] 4で割り切れる年
+[info] - should 閏年である
+[info] 4で割り切れない年
+[info] - should 閏年でない
+[info] ScalaTest
+[info] Run completed in 120 milliseconds.
+[info] Total number of tests run: 2
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 2, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] Passed: Total 2, Failed 0, Errors 0, Passed 2
+[success] Total time: 1 s, completed Sep 29, 2017 12:18:35 PM</code></pre>
+<h1 id="lx02g">lx02g</h1>
+<pre class="log"><code>sbt:lx02f&gt; project lx02g
+[info] Set current project to lx02g (in build file:/Users/wakita/Dropbox/projects/prg/lecture/)
+sbt:lx02g&gt; test
+[info] Updating {file:/Users/wakita/Dropbox/projects/prg/lecture/}lx02g...
+[info] Done updating.
+[info] Compiling 1 Scala source to /Users/wakita/tmp/sbt/prg1b/lx02g/scala-2.12/classes ...
+[info] Done compiling.
+[info] Compiling 1 Scala source to /Users/wakita/tmp/sbt/prg1b/lx02g/scala-2.12/test-classes ...
+[info] Done compiling.
+[info] LeapYearTest:
+[info] 4で割り切れる年
+[info] - should 閏年である
+[info] 4で割り切れない年
+[info] - should 閏年でない
+[info] 100で割り切れる年
+[info] - should 閏年でない *** FAILED ***
+[info]   true did not equal false (leapyear.scala:19)
+[info] ScalaTest
+[info] Run completed in 116 milliseconds.
+[info] Total number of tests run: 3
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 2, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Failed: Total 3, Failed 1, Errors 0, Passed 2
+[error] Failed tests:
+[error]     LeapYearTest
+[error] (lx02g/test:test) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 1 s, completed Sep 29, 2017 12:18:55 PM</code></pre>
+<h1 id="lx02h">lx02h</h1>
+<pre class="log"><code>sbt:lx02g&gt; project lx02h
+[info] Set current project to lx02h (in build file:/Users/wakita/Dropbox/projects/prg/lecture/)
+sbt:lx02h&gt; test
+[info] Updating {file:/Users/wakita/Dropbox/projects/prg/lecture/}lx02h...
+[info] Done updating.
+[info] Compiling 1 Scala source to /Users/wakita/tmp/sbt/prg1b/lx02h/scala-2.12/classes ...
+[info] Done compiling.
+[info] Compiling 1 Scala source to /Users/wakita/tmp/sbt/prg1b/lx02h/scala-2.12/test-classes ...
+[info] Done compiling.
+[info] LeapYearTest:
+[info] 4で割り切れる年
+[info] - should 閏年である
+[info] 4で割り切れない年
+[info] - should 閏年でない
+[info] 100で割り切れる年
+[info] - should 閏年でない
+[info] ScalaTest
+[info] Run completed in 154 milliseconds.
+[info] Total number of tests run: 3
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 3, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] Passed: Total 3, Failed 0, Errors 0, Passed 3
+[success] Total time: 1 s, completed Sep 29, 2017 12:19:10 PM</code></pre>
+<h1 id="lx02i">lx02i</h1>
+<pre class="log"><code>sbt:lx02h&gt; project lx02i
+[info] Set current project to lx02i (in build file:/Users/wakita/Dropbox/projects/prg/lecture/)
+sbt:lx02i&gt; test
+[info] Compiling 1 Scala source to /Users/wakita/tmp/sbt/prg1b/lx02i/scala-2.12/test-classes ...
+[error] /Users/wakita/Dropbox/projects/prg/lecture/lx02i/test/leapyear.scala:33:36: type mismatch;
+[error]  found   : Boolean
+[error]  required: Option[?]
+[error]     assert((compare_option(leapyear(1898), None)) == true)
+[error]                                    ^
+[error] /Users/wakita/Dropbox/projects/prg/lecture/lx02i/test/leapyear.scala:34:36: type mismatch;
+[error]  found   : Boolean
+[error]  required: Option[?]
+[error]     assert((compare_option(leapyear(1899), None)) == false)
+[error]                                    ^
+[error] two errors found
+[error] (lx02i/test:compileIncremental) Compilation failed
+[error] Total time: 1 s, completed Sep 29, 2017 12:20:05 PM</code></pre>
+<h1 id="lx02j">lx02j</h1>
+<pre class="log"><code>sbt:lx02i&gt; project lx02j
+[info] Set current project to lx02j (in build file:/Users/wakita/Dropbox/projects/prg/lecture/)
+sbt:lx02j&gt; test
+[info] LeapYearTest:
+[info] 4で割り切れる年
+[info] - should 閏年である
+[info] 4で割り切れない年
+[info] - should 閏年でない
+[info] 100で割り切れる年
+[info] - should 閏年でない
+[info] 1899年前後
+[info] - should 法律の施行時期を反映 *** FAILED ***
+[info]   LeapYearTest.this.compare_option[Boolean](LeapYear.leapyear(1898), scala.None) was false (leapyear.scala:31)
+[info] ScalaTest
+[info] Run completed in 92 milliseconds.
+[info] Total number of tests run: 4
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 3, failed 1, canceled 0, ignored 0, pending 0
+[info] *** 1 TEST FAILED ***
+[error] Failed: Total 4, Failed 1, Errors 0, Passed 3
+[error] Failed tests:
+[error]     LeapYearTest
+[error] (lx02j/test:test) sbt.TestsFailedException: Tests unsuccessful
+[error] Total time: 0 s, completed Sep 29, 2017 12:20:17 PM</code></pre>
+<h1 id="lx02k">lx02k</h1>
+<pre class="log"><code>sbt:lx02j&gt; project lx02k
+[info] Set current project to lx02k (in build file:/Users/wakita/Dropbox/projects/prg/lecture/)
+sbt:lx02k&gt; test
+[info] Updating {file:/Users/wakita/Dropbox/projects/prg/lecture/}lx02k...
+[info] Done updating.
+[info] Compiling 1 Scala source to /Users/wakita/tmp/sbt/prg1b/lx02k/scala-2.12/classes ...
+[info] Done compiling.
+[info] Compiling 1 Scala source to /Users/wakita/tmp/sbt/prg1b/lx02k/scala-2.12/test-classes ...
+[info] Done compiling.
+[info] LeapYearTest:
+[info] 4で割り切れる年
+[info] - should 閏年である
+[info] 4で割り切れない年
+[info] - should 閏年でない
+[info] 100で割り切れる年
+[info] - should 閏年でない
+[info] 1899年前後
+[info] - should 法律の施行時期を反映
+[info] ScalaTest
+[info] Run completed in 86 milliseconds.
+[info] Total number of tests run: 4
+[info] Suites: completed 1, aborted 0
+[info] Tests: succeeded 4, failed 0, canceled 0, ignored 0, pending 0
+[info] All tests passed.
+[info] Passed: Total 4, Failed 0, Errors 0, Passed 4
+[success] Total time: 2 s, completed Sep 29, 2017 12:24:24 PM</code></pre>
+</note>
+<hr />
+<p><a href="/lecture/note/">トップページへ</a></p>
+</body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Ken Wakita (https://is-prg1b.github.io/lecture/)" />
+  <title>note</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <script src="//use.edgefonts.net/source-code-pro.js"></script>
+  <script type="text/javascript" src="/lecture/lib/reveal.js-3.5.0/plugin/highlight/highlight.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <link rel="stylesheet" type="text/css" href="/lecture/lib/reveal.js-3.5.0/css/theme/solarized.css">
+  <link rel="stylesheet" type="text/css" href="/lecture/lib/kw.css">
+</head>
+<body>
+<p><a href="/lecture/note/">トップページへ</a></p>
+<hr />
+<h1 id="内容">内容</h1>
+<ul>
+<li><p><code>src/simple.c</code></p>
+<p>C言語で書かれた簡単な級数のプログラム</p></li>
+<li><p><code>src/simple.scala</code></p>
+<p><code>src/simple.c</code>と同等のScalaプログラム</p></li>
+<li><p><code>src/Makefile</code></p>
+<p>上述のふたつのプログラムをビルド、クリーン、実行するためのスクリプト．<a href="/lecture/note/lx01-makefile.html">Makefile については別途詳述した．</a></p>
+<ul>
+<li><p><code>make</code>: すべてのソフトウェアをまとめてビルド</p></li>
+<li><p><code>make clean</code>: お掃除</p></li>
+<li><p><code>make run-c</code>: <code>simple.c</code> をビルドして生成された <code>simple</code> コマンドを実行</p></li>
+<li><p><code>make run-s</code>: <code>simple.scala</code> をビルドして生成された <code>simple.class</code> を Scala の実行系を用いて実行</p></li>
+<li><p><code>make run-j</code>: <code>simple.scala</code> をビルドして生成された <code>simple.class</code> を Java の実行系を用いて実行</p></li>
+</ul></li>
+</ul>
+<hr />
+<p><a href="/lecture/note/">トップページへ</a></p>
+</body>
+</html>
