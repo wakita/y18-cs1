@@ -46,6 +46,7 @@ lazy val common_fx = common ++ Seq(libraryDependencies ++= Seq(scala_fx))
 lazy val root = (project in file(".")).settings(common)
 
 lazy val lx01 = (project in file("lx01")).settings(common)
+lazy val lx01a_sbt = (project).settings(common)
 
 val lx02 = "lx02/lx02"
 lazy val lx02a = (project in file(lx02 + "a")).settings(common)
