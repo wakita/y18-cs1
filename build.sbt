@@ -50,7 +50,6 @@ lazy val lx01a_sbt = (project).settings(common)
 
 val lx02 = "lx02/lx02"
 lazy val lx02a = (project in file(lx02 + "a")).settings(common)
-/*
 lazy val lx02b = (project in file(lx02 + "b")).settings(common)
 lazy val lx02c = (project in file(lx02 + "c")).settings(common)
 lazy val lx02d = (project in file(lx02 + "d")).settings(common)
@@ -62,6 +61,7 @@ lazy val lx02i = (project in file(lx02 + "i")).settings(common)
 lazy val lx02j = (project in file(lx02 + "j")).settings(common)
 lazy val lx02k = (project in file(lx02 + "k")).settings(common)
 
+/*
 lazy val lx03 = (project in file("lx03")).settings(common)
 lazy val lx04 = (project in file("lx04")).settings(common_fx)
 lazy val lx05 = (project in file("lx05")).settings(common_fx)
