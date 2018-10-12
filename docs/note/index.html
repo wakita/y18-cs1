@@ -15,7 +15,7 @@
   <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -28,13 +28,11 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
+  { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -87,7 +85,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <link rel="stylesheet" type="text/css" href="/y18-prg1/lib/kw.css">
 </head>
 <body>
-<header>
+<header id="title-block-header">
 <h1 class="title">プログラミング第一</h1>
 <p class="author">Ken Wakita (<a href="https://wakita.github.io/y18-prg1/" class="uri">https://wakita.github.io/y18-prg1/</a>)</p>
 </header>
@@ -98,8 +96,11 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <hr />
 <h1 id="講義資料等">講義資料等</h1>
 <ul>
-<li><p>10月1日 – <a href="https://github.com/wakita/y18-prg1/raw/master/slide/day01.pdf">講義資料</a> / サンプルコード (sbt project: <code>lx01</code>) / <a href="/y18-prg1/note/lx01-makefile.html">makeとMakefile</a> / <strong>次回小テスト (授業の内容、およびmake についての実践的な知識)</strong></p></li>
-<li><p>10月12日 — <a href="https://github.com/y18-prg1/raw/master/slide/day02.pdf">講義資料</a> / サンプルコード (sbt projects: <code>lx02a</code> – <code>lx02k</code>) / <a href="/y18-prg1/note/lx02-tests.html">テスト実行のログ</a> / <a href="/y18-prg1/quiz/quiz01.html">小テスト</a></p>
+<li>10月1日 – <a href="https://github.com/wakita/y18-prg1/raw/master/slide/day01.pdf">講義資料</a> / サンプルコード (sbt project: <code>lx01</code>) / <a href="/y18-prg1/note/lx01-makefile.html">makeとMakefile</a> / <strong>次回小テスト (授業の内容、およびmake についての実践的な知識)</strong></li>
+</ul>
+<p>https://github.com/wakita/y18-prg1/blob/master/slide/day02.pdf</p>
+<ul>
+<li><p>10月12日 — <a href="https://github.com/wakita/y18-prg1/raw/master/slide/day02.pdf">講義資料</a> / サンプルコード (sbt projects: <code>lx02a</code> – <code>lx02k</code>) / <a href="/y18-prg1/note/lx02-tests.html">テスト実行のログ</a> / <a href="/y18-prg1/quiz/quiz01.html">小テスト</a></p>
 <ul>
 <li><p><code>sbt</code> の実行方法については、テスト実行のログが参考になります。<code>sbt</code> のなかでどのようなコマンドを実行しているかを見て下さい。</p></li>
 <li><p>継続的テスト (<code>~test</code>) の実行を停止する方法は、画面ログに英語で表示されているように Enter です。</p>
@@ -108,19 +109,19 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 <!--
 
-- 10月2日 --- [講義資料](https://github.com/y18-prg1/raw/master/slide/day03.pdf) / サンプルコード (sbt project: `lx03`) / 次回小テスト
+- 10月2日 --- [講義資料](https://github.com/wakita/y18-prg1/raw/master/slide/day03.pdf) / サンプルコード (sbt project: `lx03`) / 次回小テスト
 
-- 10月13日 --- [講義資料](https://github.com/y18-prg1/raw/master/slide/day04.pdf) / サンプルコード (sbt project: `lx04`)
+- 10月13日 --- [講義資料](https://github.com/wakita/y18-prg1/raw/master/slide/day04.pdf) / サンプルコード (sbt project: `lx04`)
 
-- 10月17日 --- [講義資料](https://github.com/y18-prg1/raw/master/slide/day05.pdf) / サンプルコード (sbt project: `lx05`)
+- 10月17日 --- [講義資料](https://github.com/wakita/y18-prg1/raw/master/slide/day05.pdf) / サンプルコード (sbt project: `lx05`)
 
-- 10月20日 --- [講義資料](https://github.com/y18-prg1/raw/master/slide/day06.pdf) / サンプルコード (sbt project: `lx06`)
+- 10月20日 --- [講義資料](https://github.com/wakita/y18-prg1/raw/master/slide/day06.pdf) / サンプルコード (sbt project: `lx06`)
 
-- 10月24日 --- [講義資料](https://github.com/y18-prg1/raw/master/slide/day07.pdf) / サンプルコード (sbt project: `lx07`)
+- 10月24日 --- [講義資料](https://github.com/wakita/y18-prg1/raw/master/slide/day07.pdf) / サンプルコード (sbt project: `lx07`)
 
 - 10月27日 --- [講義資料](/slide/day08.html) / サンプルコード (sbt project: `lx08`)
 
-- 11月3日 --- [講義資料](https://github.com/y18-prg1/raw/master/slide/day09.pdf) / サンプルコード (sbt project: `lx09`)
+- 11月3日 --- [講義資料](https://github.com/wakita/y18-prg1/raw/master/slide/day09.pdf) / サンプルコード (sbt project: `lx09`)
 
 - 11月7日 --- [講義資料](/slide/day10.html) / サンプルコード (sbt project: `lx09`)
 
