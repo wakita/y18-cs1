@@ -61,8 +61,8 @@ lazy val lx02i = (project in file(lx02 + "i")).settings(common)
 lazy val lx02j = (project in file(lx02 + "j")).settings(common)
 lazy val lx02k = (project in file(lx02 + "k")).settings(common)
 
-/*
 lazy val lx03 = (project in file("lx03")).settings(common)
+/*
 lazy val lx04 = (project in file("lx04")).settings(common_fx)
 lazy val lx05 = (project in file("lx05")).settings(common_fx)
 lazy val lx06 = (project in file("lx06")).settings(common_fx)
