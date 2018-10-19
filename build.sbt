@@ -5,9 +5,9 @@
 val scalatest = Seq("org.scalactic" %% "scalactic" % "3.0.5",
                     "org.scalatest" %% "scalatest" % "3.0.5" % "test")
 
-// GUI 記述のための ScalaFX ライブラリ
-// http://www.scalafx.org/docs/quickstart/
-val scala_fx = "org.scalafx" %% "scalafx" % "8.0.144-R12"
+// GUI 記述のための ScalaFX ライブラリ (http://www.scalafx.org/docs/quickstart/)
+
+val scala_fx = Seq("org.scalafx" %% "scalafx" % "8.0.144-R12")
 
 // 以下の設定は脇田がスライドを作成するために sbt のなかから make コマンドを実行するため
 import scala.sys.process._
@@ -40,7 +40,7 @@ lazy val common = Seq(
   make := { "make" ! }
 )
 
-lazy val common_fx = common ++ Seq(libraryDependencies ++= Seq(scala_fx))
+lazy val common_fx = common ++ Seq(libraryDependencies ++= scala_fx)
 
 // サブプロジェクト群の定義．このように定めることで，共通の `build.sbt` でたくさんのプロジェクトの設定を一括して施しています．
 lazy val root = (project in file(".")).settings(common)
@@ -60,11 +60,11 @@ lazy val lx02h = (project in file(lx02 + "h")).settings(common)
 lazy val lx02i = (project in file(lx02 + "i")).settings(common)
 lazy val lx02j = (project in file(lx02 + "j")).settings(common)
 lazy val lx02k = (project in file(lx02 + "k")).settings(common)
-
 lazy val lx03 = (project in file("lx03")).settings(common)
-/*
+lazy val lx04a = (project in file("lx04a")).settings(common_fx)
 lazy val lx04 = (project in file("lx04")).settings(common_fx)
-lazy val lx05 = (project in file("lx05")).settings(common_fx)
+
+/*
 lazy val lx06 = (project in file("lx06")).settings(common_fx)
 lazy val lx07 = (project in file("lx07")).settings(common_fx)
 lazy val lx08 = (project in file("lx08")).settings(common_fx)
