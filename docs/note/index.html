@@ -15,7 +15,7 @@
   <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -28,11 +28,13 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; left: -4em; }
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all; display: inline-block;
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -85,7 +87,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <link rel="stylesheet" type="text/css" href="/y18-prg1/lib/kw.css">
 </head>
 <body>
-<header id="title-block-header">
+<header>
 <h1 class="title">プログラミング第一</h1>
 <p class="author">Ken Wakita (<a href="https://wakita.github.io/y18-prg1/" class="uri">https://wakita.github.io/y18-prg1/</a>)</p>
 </header>
@@ -107,7 +109,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>慣れている人はつい、Ctrl-C を使ってしまうかもしれません。これは <code>sbt</code> 全体を殺してしまうので注意して下さい。</p></li>
 </ul></li>
 <li><p>10月15日 — <a href="https://github.com/wakita/y18-prg1/raw/master/slide/day03.pdf">講義資料</a> / サンプルコード (sbt project: <code>lx03</code>) / 次回小テスト</p></li>
-<li><p>10月19日 — <a href="https://github.com/wakita/y18-prg1/raw/master/slide/day04.pdf">講義資料</a> / サンプルコード (sbt project: <code>lx04</code>)</p>
+<li><p>10月19日 — <a href="https://github.com/wakita/y18-prg1/raw/master/slide/day04.pdf">講義資料</a> / サンプルコード (sbt project: <code>lx04</code>) / <a href="/y18-prg1/quiz/quiz02.html">小テスト</a></p>
 <ul>
 <li><a href="https://github.com/wakita/y18-prg1/raw/master/slide/day04-supplement.pdf">補遺: 関数と状態</a> / サンプルコード (sbt project: <code>lx04a</code>)</li>
 </ul></li>
