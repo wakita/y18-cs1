@@ -51,6 +51,10 @@ code.sourceCode {
   line-height: 1.2;
 }
 
+strong {
+  color: #d22;
+}
+
 /*
 .lineNumbers pre {
   font-family: source-code-pro, monospace;
@@ -64,9 +68,5 @@ code.sourceCode {
 
 .quiz li {
   padding-bottom: 10ex;
-}
-
-strong {
-  color: #d22;
 }
 */
