@@ -26,7 +26,8 @@ class Test4 extends FunSuite with Matchers {
 
   def T(spec1: Spec, spec2: Spec, answer: String) {
 
-    (spec1, spec2) match { case ((_, (h1, v1@_)), (label@_, (h2, v2))) => {
+    // (spec1, spec2) match { case ((_, (h1, v1@_)), (label@_, (h2, v2))) => {
+    (spec1, spec2) match { case ((_, (h1, v1)), (label, (h2, v2))) => {
       test(f"$id: 履歴の長さが仕様と合致すること") {
         h2.length should be (answer.length)
       }
