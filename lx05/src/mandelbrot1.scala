@@ -1,4 +1,4 @@
-package mandelbrot1
+package lx05.mandelbrot1
 
 import scala.math.{abs,max}
 
@@ -12,7 +12,7 @@ import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.{BorderPane,HBox,Priority}
 import scalafx.scene.paint.Color
 
-import complex1.Complex
+import lx05.complex1.Complex
 
 /**
  * マンデルブロ顕微鏡の実装例

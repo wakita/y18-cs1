@@ -1,4 +1,4 @@
-package complex2
+package lx05.complex2
 
 import scala.math._
 

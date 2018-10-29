@@ -1,4 +1,4 @@
-package mandelbrot2
+package lx05.mandelbrot2
 
 import scala.math.{abs,min,max}
 
@@ -12,7 +12,7 @@ import scalafx.scene.input.MouseEvent
 import scalafx.scene.layout.{BorderPane,HBox,Priority}
 import scalafx.scene.paint.Color
 
-import complex2.Complex
+import lx05.complex2.Complex
 
 object Model {
 

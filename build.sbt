@@ -76,10 +76,10 @@ lazy val lx03  = project.settings(common)
 lazy val lx04a = project.settings(common_fx)
 lazy val lx04  = project.settings(common_fx)
 lazy val lx05  = project.settings(common_fx)
+lazy val lx06 = project.settings(common)
+lazy val lx07 = project.settings(common_fx).dependsOn(lx05)
 
 /*
-lazy val lx06 = (project in file("lx06")).settings(common_fx)
-lazy val lx07 = (project in file("lx07")).settings(common_fx)
 lazy val lx08 = (project in file("lx08")).settings(common_fx)
 lazy val lx09 = (project in file("lx09")).settings(common)
 lazy val lx10 = (project in file("lx09")).settings(common)
