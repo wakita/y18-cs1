@@ -334,32 +334,30 @@ L_3:\quad &amp;
 </ul>
 <h2 id="object-recursivebackgrackingvm"><strong>object</strong> RecursiveBackgrackingVM</h2>
 <div class="sourceCode" id="cb14"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">object</span> RecursiveBacktrackingVM <span class="kw">extends</span> VM {</a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">  <span class="kw">def</span> <span class="fu">execute</span>(_program: Program, s: String): Boolean = {</a>
-<a class="sourceLine" id="cb14-3" data-line-number="3">    <span class="kw">val</span> program = _program.<span class="fu">toArray</span></a>
-<a class="sourceLine" id="cb14-4" data-line-number="4">    <span class="kw">def</span> <span class="fu">_execute</span>(pc: ProgramCounter, i: StringIndex): Boolean = {</a>
-<a class="sourceLine" id="cb14-5" data-line-number="5">      <span class="fu">program</span>(pc) <span class="kw">match</span> {</a>
-<a class="sourceLine" id="cb14-6" data-line-number="6">        <span class="kw">case</span> Character(c) =&gt; i &lt; s.<span class="fu">size</span> &amp;&amp; <span class="fu">s</span>(i) == c &amp;&amp; <span class="fu">_execute</span>(pc+<span class="dv">1</span>, i+<span class="dv">1</span>)</a>
-<a class="sourceLine" id="cb14-7" data-line-number="7">        <span class="kw">case</span> <span class="fu">Jump</span>(label) =&gt; <span class="fu">_execute</span>(label, i)</a>
-<a class="sourceLine" id="cb14-8" data-line-number="8">        <span class="kw">case</span> <span class="fu">Split</span>(label1, label2) =&gt; <span class="fu">_execute</span>(label1, i) || <span class="fu">_execute</span>(label2, i)</a>
-<a class="sourceLine" id="cb14-9" data-line-number="9">        <span class="kw">case</span> Match =&gt; i == s.<span class="fu">size</span></a>
-<a class="sourceLine" id="cb14-10" data-line-number="10">      }</a>
-<a class="sourceLine" id="cb14-11" data-line-number="11">    }</a>
-<a class="sourceLine" id="cb14-12" data-line-number="12">    <span class="fu">_execute</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb14-13" data-line-number="13">  }</a>
-<a class="sourceLine" id="cb14-14" data-line-number="14">}</a></code></pre></div>
+<a class="sourceLine" id="cb14-2" data-line-number="2">  <span class="kw">def</span> <span class="fu">execute</span>(program: Program, s: String): Boolean = {</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">    <span class="kw">def</span> <span class="fu">_execute</span>(pc: ProgramCounter, i: StringIndex): Boolean = {</a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">      <span class="fu">program</span>(pc) <span class="kw">match</span> {</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">        <span class="kw">case</span> Character(c) =&gt; i &lt; s.<span class="fu">size</span> &amp;&amp; <span class="fu">s</span>(i) == c &amp;&amp; <span class="fu">_execute</span>(pc+<span class="dv">1</span>, i+<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">        <span class="kw">case</span> <span class="fu">Jump</span>(label) =&gt; <span class="fu">_execute</span>(label, i)</a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">        <span class="kw">case</span> <span class="fu">Split</span>(label1, label2) =&gt; <span class="fu">_execute</span>(label1, i) || <span class="fu">_execute</span>(label2, i)</a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">        <span class="kw">case</span> Match =&gt; i == s.<span class="fu">size</span></a>
+<a class="sourceLine" id="cb14-9" data-line-number="9">      }</a>
+<a class="sourceLine" id="cb14-10" data-line-number="10">    }</a>
+<a class="sourceLine" id="cb14-11" data-line-number="11">    <span class="fu">_execute</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb14-12" data-line-number="12">  }</a>
+<a class="sourceLine" id="cb14-13" data-line-number="13">}</a></code></pre></div>
 <h2 id="execute-の概要-12"><code>execute</code> の概要 (1/2)</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">def</span> <span class="fu">execute</span>(_program, s): Boolean = {</a>
-<a class="sourceLine" id="cb15-2" data-line-number="2">  <span class="kw">val</span> program = _program.<span class="fu">toArray</span></a>
-<a class="sourceLine" id="cb15-3" data-line-number="3">  <span class="kw">def</span> <span class="fu">_execute</span>(pc, i) = {</a>
-<a class="sourceLine" id="cb15-4" data-line-number="4">    <span class="fu">program</span>(pc) <span class="kw">match</span> {</a>
-<a class="sourceLine" id="cb15-5" data-line-number="5">      <span class="kw">case</span> Character(c) =&gt; ...</a>
-<a class="sourceLine" id="cb15-6" data-line-number="6">      <span class="kw">case</span> <span class="fu">Jump</span>(label) =&gt; ...</a>
-<a class="sourceLine" id="cb15-7" data-line-number="7">      <span class="kw">case</span> <span class="fu">Split</span>(label1, label2) =&gt; ...</a>
-<a class="sourceLine" id="cb15-8" data-line-number="8">      <span class="kw">case</span> Match =&gt; ...</a>
-<a class="sourceLine" id="cb15-9" data-line-number="9">    }</a>
-<a class="sourceLine" id="cb15-10" data-line-number="10">  }</a>
-<a class="sourceLine" id="cb15-11" data-line-number="11">  <span class="fu">_execute</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
-<a class="sourceLine" id="cb15-12" data-line-number="12">}</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">def</span> <span class="fu">execute</span>(program, s): Boolean = {</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">  <span class="kw">def</span> <span class="fu">_execute</span>(pc, i) = {</a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">    <span class="fu">program</span>(pc) <span class="kw">match</span> {</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">      <span class="kw">case</span> Character(c) =&gt; ...</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5">      <span class="kw">case</span> <span class="fu">Jump</span>(label) =&gt; ...</a>
+<a class="sourceLine" id="cb15-6" data-line-number="6">      <span class="kw">case</span> <span class="fu">Split</span>(label1, label2) =&gt; ...</a>
+<a class="sourceLine" id="cb15-7" data-line-number="7">      <span class="kw">case</span> Match =&gt; ...</a>
+<a class="sourceLine" id="cb15-8" data-line-number="8">    }</a>
+<a class="sourceLine" id="cb15-9" data-line-number="9">  }</a>
+<a class="sourceLine" id="cb15-10" data-line-number="10">  <span class="fu">_execute</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb15-11" data-line-number="11">}</a></code></pre></div>
 <ul>
 <li><p><em>pc</em>: 次に実行するのは<span class="math inline">\(program\)</span>中の第<span class="math inline">\(pc\)</span>番目の命令</p></li>
 <li><p><em>i</em>: 次に読み込む文字は入力文字列<span class="math inline">\(s\)</span>中の第<span class="math inline">\(i\)</span>番目</p></li>
@@ -377,7 +375,7 @@ L_3:\quad &amp;
 <p>すべての文字列を読み切っていたら受理．ここでの条件を <code>true</code> にすれば <code>findPrefixOf</code> のような機能になる．</p></li>
 </ul>
 <h2 id="object-iterativebackgrackingvm-の概要"><strong>object</strong> IterativeBackgrackingVM の概要</h2>
-<div class="sourceCode" id="cb16"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">def</span> <span class="fu">execute</span>(_program: Program, s: String): Boolean = {</a>
+<div class="sourceCode" id="cb16"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">def</span> <span class="fu">execute</span>(program: Program, s: String): Boolean = {</a>
 <a class="sourceLine" id="cb16-2" data-line-number="2">  <span class="kw">var</span> threads = Queue[(ProgramCounter, StringIndex)]((<span class="dv">0</span>, <span class="dv">0</span>))</a>
 <a class="sourceLine" id="cb16-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb16-4" data-line-number="4">  <span class="kw">while</span> (!threads.<span class="fu">isEmpty</span>) { <span class="co">// スレッドプールが空になるまで</span></a>
@@ -393,7 +391,7 @@ L_3:\quad &amp;
 <a class="sourceLine" id="cb16-14" data-line-number="14">  <span class="kw">false</span> <span class="co">// すべてのスレッドが尽きたら非受理</span></a>
 <a class="sourceLine" id="cb16-15" data-line-number="15">}</a></code></pre></div>
 <h2 id="thompsonvm-の概要">ThompsonVM の概要</h2>
-<div class="sourceCode" id="cb17"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">def</span> <span class="fu">execute</span>(_program, s) = {</a>
+<div class="sourceCode" id="cb17"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">def</span> <span class="fu">execute</span>(program, s) = {</a>
 <a class="sourceLine" id="cb17-2" data-line-number="2">  <span class="kw">var</span> threads = Set[ProgramCounter](<span class="dv">0</span>)  <span class="co">// i文字目を処理したがっているスレッドたち</span></a>
 <a class="sourceLine" id="cb17-3" data-line-number="3"></a>
 <a class="sourceLine" id="cb17-4" data-line-number="4">  <span class="kw">for</span> (i &lt;- <span class="dv">0</span> to s.<span class="fu">length</span>) {</a>
