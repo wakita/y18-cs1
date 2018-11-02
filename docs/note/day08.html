@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <meta name="author" content="Ken Wakita (https://wakita.github.io/y18-prg1/)" />
+  <title>PRG (10): 正規表現VMの実装</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; position: absolute; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; }
+pre.numberSource a.sourceLine:empty
+  { position: absolute; }
+pre.numberSource a.sourceLine::before
+  { content: attr(data-line-number);
+    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.2/MathJax.js?config=TeX-AMS_CHTML-full" type="text/javascript"></script>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+  <script src="//use.edgefonts.net/source-code-pro.js"></script>
+  <script type="text/javascript" src="/y18-prg1/lib/reveal.js/plugin/highlight/highlight.js"></script>
+  <script>hljs.initHighlightingOnLoad();</script>
+  <link rel="stylesheet" type="text/css" href="/y18-prg1/lib/reveal.js/css/theme/solarized.css">
+  <link rel="stylesheet" type="text/css" href="/y18-prg1/lib/kw.css">
+</head>
+<body>
+<header>
+<h1 class="title">PRG (10): 正規表現VMの実装</h1>
+<p class="author">Ken Wakita (<a href="https://wakita.github.io/y18-prg1/" class="uri">https://wakita.github.io/y18-prg1/</a>)</p>
+<p class="date">2017.11.7</p>
+</header>
+<ul>
+<li><p><a href="/y18-prg1/note/">トップページへ</a></p></li>
+<li><p><a href="https://github.com/wakita/y18-prg1">GitHubへ</a></p></li>
+</ul>
+<hr />
+<h1 id="目次">目次</h1>
+<h2 id="目次-1">目次</h2>
+<ul>
+<li><p><code>object</code> / <code>class</code> / <code>trait</code> とその拡張</p>
+<ul>
+<li>例題の実装と <code>extends</code> の利用</li>
+</ul></li>
+<li><p>仮想機械の命令セット</p></li>
+<li><p>仮想命令</p></li>
+<li><p>コンパイル：正規表現から命令列への変換</p></li>
+<li><p>3種の仮想機械の実装</p></li>
+</ul>
+<h1 id="object-class-trait-とその拡張"><code>object</code> / <code>class</code> / <code>trait</code> とその拡張</h1>
+<h2 id="object-定義"><code>object</code> 定義</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb1-1" data-line-number="1"><span class="kw">object</span> RegularExpressionVM {</a>
+<a class="sourceLine" id="cb1-2" data-line-number="2">  <span class="kw">type</span> Program = Array[Instruction]</a>
+<a class="sourceLine" id="cb1-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb1-4" data-line-number="4">  <span class="kw">val</span> version = <span class="st">&quot;regexp.sclala v1.01&quot;</span></a>
+<a class="sourceLine" id="cb1-5" data-line-number="5">  <span class="kw">var</span> time_start = System.<span class="fu">nanoTime</span>()</a>
+<a class="sourceLine" id="cb1-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb1-7" data-line-number="7">  <span class="kw">def</span> <span class="fu">printProgram</span>(program: Program) { ... }</a>
+<a class="sourceLine" id="cb1-8" data-line-number="8">}</a></code></pre></div>
+<ul>
+<li>Scala の <code>object</code> は宣言の集合体．C言語の structure に似ている．
+<ul>
+<li><code>type</code> 宣言を用いた型名の宣言</li>
+<li><code>val</code> 宣言を用いた定数の宣言</li>
+<li><code>var</code> 宣言を用いた変数の宣言</li>
+<li><code>def</code> 宣言を用いた関数（メソッド）の宣言</li>
+</ul></li>
+</ul>
+<h2 id="class-定義"><code>class</code> 定義</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="kw">class</span> <span class="fu">Complex</span>(_re: Double, _im: Double) {</a>
+<a class="sourceLine" id="cb2-2" data-line-number="2">  <span class="kw">def</span> re = _re</a>
+<a class="sourceLine" id="cb2-3" data-line-number="3">  <span class="kw">def</span> im = _im</a>
+<a class="sourceLine" id="cb2-4" data-line-number="4">  <span class="kw">def</span> <span class="fu">plus</span>(c: Complex) = <span class="kw">new</span> <span class="fu">Complex</span>(_re + c.<span class="fu">re</span>, _im + c.<span class="fu">im</span>)</a>
+<a class="sourceLine" id="cb2-5" data-line-number="5">  <span class="kw">def</span> <span class="fu">minus</span>(c: Complex) = <span class="kw">new</span> <span class="fu">Complex</span>(re - c.<span class="fu">re</span>, im - c.<span class="fu">im</span>)</a>
+<a class="sourceLine" id="cb2-6" data-line-number="6">  ...</a>
+<a class="sourceLine" id="cb2-7" data-line-number="7">}</a></code></pre></div>
+<ul>
+<li>Scala の <code>class</code> は <code>object</code> の雛形の定義
+<ul>
+<li><p><code>object</code> 宣言はクラス宣言と<code>new</code>の省略形と見做すことができる．</p></li>
+<li><p><code>class</code>は型でもある．クラスのインスタンスは型としてのクラスに属する．</p></li>
+</ul></li>
+</ul>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb3-1" data-line-number="1"><span class="kw">class</span> _RegularExpressionVM_ {</a>
+<a class="sourceLine" id="cb3-2" data-line-number="2">  <span class="kw">type</span> Program = ...</a>
+<a class="sourceLine" id="cb3-3" data-line-number="3">  <span class="kw">val</span> version = ...</a>
+<a class="sourceLine" id="cb3-4" data-line-number="4">  <span class="kw">var</span> time_start = ...</a>
+<a class="sourceLine" id="cb3-5" data-line-number="5">  <span class="kw">def</span> <span class="fu">printProgram</span>(...) { ...}</a>
+<a class="sourceLine" id="cb3-6" data-line-number="6">}</a>
+<a class="sourceLine" id="cb3-7" data-line-number="7"><span class="kw">val</span> RegularExpressionVM = <span class="kw">new</span> <span class="fu">_RegularExpressionVM_</span>()</a></code></pre></div>
+<h2 id="trait-定義"><code>trait</code> 定義</h2>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb4-1" data-line-number="1"><span class="kw">trait</span> RegularExpression {</a>
+<a class="sourceLine" id="cb4-2" data-line-number="2">  <span class="kw">def</span> <span class="fu">_compile</span>(label: Int): (Int, LProgram)</a>
+<a class="sourceLine" id="cb4-3" data-line-number="3">  <span class="kw">def</span> compile: Program = (_<span class="fu">compile</span>(<span class="dv">0</span>)._<span class="dv">2</span> ++ List(Match)).<span class="fu">toArray</span></a>
+<a class="sourceLine" id="cb4-4" data-line-number="4">}</a></code></pre></div>
+<ul>
+<li><p><code>trait</code> は，これに定義を追加することでクラスやオブジェクトを作成するためのもの</p></li>
+<li><p><code>trait</code> は，クラスやオブジェクトを構成するための雛形</p></li>
+</ul>
+<h2 id="拡張定義を用いたオブジェトの作成">拡張定義を用いたオブジェトの作成</h2>
+<ul>
+<li>既存の <code>object</code>, <code>class</code>, <code>trait</code> に定義を追加して，新たな <code>object,</code>class<code>,</code>trait` を追加できる．</li>
+</ul>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb5-1" data-line-number="1"><span class="kw">object</span> A {</a>
+<a class="sourceLine" id="cb5-2" data-line-number="2">  <span class="kw">val</span> x = <span class="dv">1</span></a>
+<a class="sourceLine" id="cb5-3" data-line-number="3">}</a>
+<a class="sourceLine" id="cb5-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb5-5" data-line-number="5"><span class="kw">object</span> B <span class="kw">extends</span> A { <span class="kw">val</span> y = <span class="dv">2</span> }</a>
+<a class="sourceLine" id="cb5-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb5-7" data-line-number="7"><span class="kw">object</span> C <span class="kw">extends</span> A { <span class="kw">val</span> y = <span class="dv">3</span> }</a></code></pre></div>
+<ul>
+<li><code>A</code> オブジェクトを拡張して <code>B</code> オブジェクトと <code>C</code> オブジェクトを定義している．
+<ul>
+<li><code>A.x</code> = <code>B.x</code> = <code>C.x</code> = 1</li>
+<li><code>B.y</code> = 2, <code>C.y</code> = 3</li>
+</ul>
+共通する定義 (<code>x</code>) の共有による，定義の簡素化</li>
+</ul>
+<h2 id="拡張定義を用いたクラスの定義-12">拡張定義を用いたクラスの定義 (1/2)</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb6-1" data-line-number="1"><span class="kw">trait</span> RegularExpression {</a>
+<a class="sourceLine" id="cb6-2" data-line-number="2">  <span class="kw">def</span> <span class="fu">_compile</span>(label: Int): (Int, LProgram)</a>
+<a class="sourceLine" id="cb6-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb6-4" data-line-number="4">  <span class="kw">def</span> compile: Program = (_<span class="fu">compile</span>(<span class="dv">0</span>)._<span class="dv">2</span> ++ List(Match)).<span class="fu">toArray</span></a>
+<a class="sourceLine" id="cb6-5" data-line-number="5">}</a>
+<a class="sourceLine" id="cb6-6" data-line-number="6"></a>
+<a class="sourceLine" id="cb6-7" data-line-number="7"><span class="kw">case</span> <span class="kw">class</span> <span class="fu">C</span>(c: Char) <span class="kw">extends</span> RegularExpression {</a>
+<a class="sourceLine" id="cb6-8" data-line-number="8">  <span class="kw">override</span> <span class="kw">def</span> toString: String = c.<span class="fu">toString</span></a>
+<a class="sourceLine" id="cb6-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb6-10" data-line-number="10">  <span class="kw">def</span> <span class="fu">_compile</span>(label0: Int): (Int, LProgram) = {</a>
+<a class="sourceLine" id="cb6-11" data-line-number="11">    <span class="kw">val</span> (label1, <span class="dt">char</span>) = (label0+<span class="dv">1</span>, List(Character(c)))</a>
+<a class="sourceLine" id="cb6-12" data-line-number="12">    (label1, <span class="dt">char</span>)</a>
+<a class="sourceLine" id="cb6-13" data-line-number="13">  }</a>
+<a class="sourceLine" id="cb6-14" data-line-number="14">}</a></code></pre></div>
+<ul>
+<li><code>RegularExpression</code> trait を拡張して，１文字読み込み命令にあたる <code>C</code> クラスを定義</li>
+</ul>
+<h2 id="拡張定義を用いたクラスの定義-22">拡張定義を用いたクラスの定義 (2/2)</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb7-1" data-line-number="1"><span class="kw">trait</span> RegularExpression {</a>
+<a class="sourceLine" id="cb7-2" data-line-number="2">  <span class="kw">def</span> <span class="fu">_compile</span>(label: Int): (Int, LProgram)</a>
+<a class="sourceLine" id="cb7-3" data-line-number="3">  <span class="kw">def</span> compile: Program = (_<span class="fu">compile</span>(<span class="dv">0</span>)._<span class="dv">2</span> ++ List(Match)).<span class="fu">toArray</span></a>
+<a class="sourceLine" id="cb7-4" data-line-number="4">}</a>
+<a class="sourceLine" id="cb7-5" data-line-number="5"></a>
+<a class="sourceLine" id="cb7-6" data-line-number="6"><span class="kw">case</span> <span class="kw">class</span> <span class="fu">C</span>(c: Char) <span class="kw">extends</span> RegularExpression {</a>
+<a class="sourceLine" id="cb7-7" data-line-number="7">  <span class="kw">override</span> <span class="kw">def</span> toString: String = c.<span class="fu">toString</span></a>
+<a class="sourceLine" id="cb7-8" data-line-number="8"></a>
+<a class="sourceLine" id="cb7-9" data-line-number="9">  <span class="kw">def</span> <span class="fu">_compile</span>(label0: Int): (Int, LProgram) = { ...  }</a>
+<a class="sourceLine" id="cb7-10" data-line-number="10">}</a></code></pre></div>
+<ul>
+<li><p>（すべてのオジェクト/クラス/traitに共通に定義されている）<code>toString</code> を再定義し</p></li>
+<li><p><code>RegularExpression</code> で定義された <code>_compile</code> 関数を提供し</p></li>
+<li><p><code>RegularExpression</code> では型だけが定められていた <code>compile</code> 関数を定義している．</p></li>
+</ul>
+<h1 id="仮想機械の命令セット">仮想機械の命令セット</h1>
+<h2 id="仮想機械命令の構成">仮想機械命令の構成</h2>
+<ul>
+<li><strong>trait</strong> Instruction
+<ul>
+<li><strong>case class</strong> Character(Char) extends Instruction</li>
+<li><strong>case class</strong> Jump(Int) extends Instruction</li>
+<li><strong>case class</strong> Split(Int, Int) extends Instruction</li>
+<li><strong>case class</strong> Match extends Instruction</li>
+</ul></li>
+<li><code>case class</code> 定義は <code>trait</code> の拡張の一種</li>
+</ul>
+<h1 id="さまざまな正規表現">さまざまな正規表現</h1>
+<h2 id="正規表現の構成">正規表現の構成</h2>
+<ul>
+<li>trait RegularExpression
+<ul>
+<li><strong>case object</strong> Empty extends RegularExpression</li>
+<li><strong>case class</strong> C(Char) extends RegularExpression</li>
+<li><strong>case class</strong> Alternate(RE, RE) extends RegularExpression</li>
+<li><strong>case class</strong> Star(RE) extends RegularExpression</li>
+</ul></li>
+</ul>
+<h2 id="trait-regularexpression"><strong>trait</strong> <code>RegularExpression</code></h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">trait</span> RegularExpression {</a>
+<a class="sourceLine" id="cb8-2" data-line-number="2">  <span class="kw">def</span> <span class="fu">_compile</span>(label: Int): (Int, LProgram)</a>
+<a class="sourceLine" id="cb8-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb8-4" data-line-number="4">  <span class="kw">def</span> compile: Program = (_<span class="fu">compile</span>(<span class="dv">0</span>)._<span class="dv">2</span> ++ List(Match)).<span class="fu">toArray</span></a>
+<a class="sourceLine" id="cb8-5" data-line-number="5">}</a></code></pre></div>
+<ul>
+<li><p><code>compile</code> 関数については trait が定義を与えている</p></li>
+<li><p><code>_compile</code> 関数については，引数と返り値の型を定めているだけ．<code>RegularExpression</code> を拡張して定義するクラスやオブジェクトがこの定義に沿って<code>_compile</code>を提供しなくてはいけない．</p></li>
+</ul>
+<h2 id="compile"><code>_compile</code></h2>
+<p><code>_compile(label: Int): (Int, LProgram)</code></p>
+<ul>
+<li><p><em>label</em> は命令列の最初の命令のインデックス</p></li>
+<li><p>返り値の第1項 (Int) はこの正規表現に続く命令列の最初の命令のインデックス．この正規表現に対応する命令列の長さが <span class="math inline">\(\ell\)</span> ならば <span class="math inline">\(\mathit {label} + \ell\)</span>を返す．</p></li>
+<li><p>返り値の第2項はこの正規表現に該当する命令列．</p></li>
+</ul>
+<h2 id="object-empty-varepsilon"><strong>object</strong> <code>Empty</code> – (<span class="math inline">\(\varepsilon\)</span>)</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb9-1" data-line-number="1"><span class="kw">case</span> <span class="kw">object</span> Empty <span class="kw">extends</span> RegularExpression {</a>
+<a class="sourceLine" id="cb9-2" data-line-number="2">  <span class="kw">def</span> <span class="fu">_compile</span>(label0: Int): (Int, LProgram) = (label0, List())</a>
+<a class="sourceLine" id="cb9-3" data-line-number="3">}</a></code></pre></div>
+<ul>
+<li><p>正規表現 <span class="math inline">\(\varepsilon\)</span> に対応した定義</p>
+<p><span class="math display">\[T[\varepsilon] = \varepsilon\]</span></p>
+<ul>
+<li><p>この変換はラベルを消費しないので，渡された <em>label0</em> をそのまま返す</p></li>
+<li><p><span class="math inline">\(\varepsilon\)</span> に対応するのは空命令列 (= <code>List()</code>)</p></li>
+</ul></li>
+<li><p>各正規表現をオブジェクトとして表現するなかで，<span class="math inline">\(\varepsilon\)</span> は世界に唯ひとつなので，わざわざクラスを利用せずとも単純なオブジェクトとして定義できる．</p></li>
+</ul>
+<h2 id="class-cchar-c">class <code>C(Char)</code> – (<span class="math inline">\(c\)</span>)</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb10-1" data-line-number="1"><span class="kw">case</span> <span class="kw">class</span> <span class="fu">C</span>(c: Char) <span class="kw">extends</span> RegularExpression {</a>
+<a class="sourceLine" id="cb10-2" data-line-number="2">  <span class="kw">def</span> <span class="fu">_compile</span>(label0: Int): (Int, LProgram) = {</a>
+<a class="sourceLine" id="cb10-3" data-line-number="3">    <span class="kw">val</span> (label1, <span class="dt">char</span>) = (label0+<span class="dv">1</span>, List(Character(c)))</a>
+<a class="sourceLine" id="cb10-4" data-line-number="4">    (label1, <span class="dt">char</span>)</a>
+<a class="sourceLine" id="cb10-5" data-line-number="5">  }</a>
+<a class="sourceLine" id="cb10-6" data-line-number="6">}</a></code></pre></div>
+<ul>
+<li><p><span class="math display">\[T[c] = \text {char } c\]</span></p></li>
+<li><p>正規表現<span class="math inline">\(c\)</span>に該当するのは<code>[Character(c)]</code>の1命令なので，この命令列の次の命令のインデックスは<span class="math inline">\(\mathit {label}_0 + 1\)</span>．</p></li>
+</ul>
+<h2 id="class-concatenater1-r2">class <code>Concatenate(r1, r2)</code></h2>
+<p><span class="math inline">\(r_1\ r_2\)</span></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb11-1" data-line-number="1"><span class="kw">case</span> <span class="kw">class</span> <span class="fu">Concatenate</span>(r1: RegularExpression, r2: RegularExpression) <span class="kw">extends</span> RegularExpression {</a>
+<a class="sourceLine" id="cb11-2" data-line-number="2">  <span class="kw">def</span> <span class="fu">_compile</span>(label0: Int): (Int, LProgram) = {</a>
+<a class="sourceLine" id="cb11-3" data-line-number="3">    <span class="kw">val</span> (label1, program1) = r1._<span class="fu">compile</span>(label0)</a>
+<a class="sourceLine" id="cb11-4" data-line-number="4">    <span class="kw">val</span> (label2, program2) = r2._<span class="fu">compile</span>(label1)</a>
+<a class="sourceLine" id="cb11-5" data-line-number="5">    (label2, program1 ++ program2)</a>
+<a class="sourceLine" id="cb11-6" data-line-number="6">  }</a>
+<a class="sourceLine" id="cb11-7" data-line-number="7">}</a></code></pre></div>
+<ul>
+<li><p><span class="math display">\[T[r_1\ r_2] = T[r_1]; T[r_2]\]</span></p></li>
+<li><p><span class="math inline">\(r_1\)</span> と <span class="math inline">\(r_2\)</span> を順次コンパイルしたものを繋げればよい．</p>
+<ul>
+<li><code>val (_, program1) = r1._compile(...)</code></li>
+<li><code>val (_, program2) = r2._compile(...)</code></li>
+<li><code>program1 ++ program2</code></li>
+</ul></li>
+<li><p>命令のインデックスの受け渡しに注意: <code>label0</code>, <code>label1</code>, <code>label2</code></p></li>
+</ul>
+<h2 id="class-alternater">class <code>Alternate(r)</code></h2>
+<p><span class="math display">\[\begin {align}
+T[r_1 | r_2] =\, &amp; \text {split } L_1, L_2 \\
+L_1:\quad &amp; T[r_1] \\
+     &amp; \text {jump } L_3 \\
+L_2:\quad &amp; T[r_2] \\
+L_3:\quad &amp;
+\end {align}\]</span></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb12-1" data-line-number="1"><span class="kw">case</span> <span class="kw">class</span> <span class="fu">Alternate</span>(r1: RegularExpression, r2: RegularExpression) <span class="kw">extends</span> RegularExpression {</a>
+<a class="sourceLine" id="cb12-2" data-line-number="2">  <span class="kw">def</span> <span class="fu">_compile</span>(label0: Int): (Int, LProgram) = {</a>
+<a class="sourceLine" id="cb12-3" data-line-number="3">    <span class="kw">val</span> label1 = label0 + <span class="dv">1</span> <span class="co">// Split(L1, L3)</span></a>
+<a class="sourceLine" id="cb12-4" data-line-number="4">    <span class="kw">val</span> (label2, program1) = r1._<span class="fu">compile</span>(label1)</a>
+<a class="sourceLine" id="cb12-5" data-line-number="5">    <span class="kw">val</span> label3 = label2 + <span class="dv">1</span> <span class="co">// Jump(L4)</span></a>
+<a class="sourceLine" id="cb12-6" data-line-number="6">    <span class="kw">val</span> (label4, program2) = r2._<span class="fu">compile</span>(label3)</a>
+<a class="sourceLine" id="cb12-7" data-line-number="7"></a>
+<a class="sourceLine" id="cb12-8" data-line-number="8">    <span class="kw">val</span> split = List(<span class="fu">Split</span>(label1, label3))</a>
+<a class="sourceLine" id="cb12-9" data-line-number="9">    <span class="kw">val</span> jump = List(<span class="fu">Jump</span>(label4))</a>
+<a class="sourceLine" id="cb12-10" data-line-number="10">    (label4, split ++ program1 ++ jump ++ program2)</a>
+<a class="sourceLine" id="cb12-11" data-line-number="11">  }</a>
+<a class="sourceLine" id="cb12-12" data-line-number="12">}</a></code></pre></div>
+<h1 id="仮想機械の実装">仮想機械の実装</h1>
+<h2 id="trait-vm-仮想機械の雛形"><strong>trait</strong> VM – 仮想機械の雛形</h2>
+<div class="sourceCode" id="cb13"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb13-1" data-line-number="1"><span class="kw">trait</span> VM {</a>
+<a class="sourceLine" id="cb13-2" data-line-number="2">  <span class="kw">type</span> ProgramCounter = Int</a>
+<a class="sourceLine" id="cb13-3" data-line-number="3">  <span class="kw">type</span> StringIndex = Int</a>
+<a class="sourceLine" id="cb13-4" data-line-number="4"></a>
+<a class="sourceLine" id="cb13-5" data-line-number="5">  <span class="kw">def</span> <span class="fu">execute</span>(program: Program, s: String): Boolean</a></code></pre></div>
+<ul>
+<li><p><em>execute</em>: 正規表現に対応する命令列 (<em>program</em>) を入力文字列 (<span class="math inline">\(s\)</span>) に適用し，受理か否かを返答</p></li>
+<li><p><em>trait</em> VM を拡張して，実際に動作する VM を定義</p>
+<ul>
+<li><code>object RecursiveBackgrackingVM extends VM</code></li>
+<li><code>object IterativeBackgrackingVM extends VM</code></li>
+<li><code>object KenThompsonVM extends VM</code></li>
+</ul></li>
+</ul>
+<h2 id="object-recursivebackgrackingvm"><strong>object</strong> RecursiveBackgrackingVM</h2>
+<div class="sourceCode" id="cb14"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="kw">object</span> RecursiveBacktrackingVM <span class="kw">extends</span> VM {</a>
+<a class="sourceLine" id="cb14-2" data-line-number="2">  <span class="kw">def</span> <span class="fu">execute</span>(_program: Program, s: String): Boolean = {</a>
+<a class="sourceLine" id="cb14-3" data-line-number="3">    <span class="kw">val</span> program = _program.<span class="fu">toArray</span></a>
+<a class="sourceLine" id="cb14-4" data-line-number="4">    <span class="kw">def</span> <span class="fu">_execute</span>(pc: ProgramCounter, i: StringIndex): Boolean = {</a>
+<a class="sourceLine" id="cb14-5" data-line-number="5">      <span class="fu">program</span>(pc) <span class="kw">match</span> {</a>
+<a class="sourceLine" id="cb14-6" data-line-number="6">        <span class="kw">case</span> Character(c) =&gt; i &lt; s.<span class="fu">size</span> &amp;&amp; <span class="fu">s</span>(i) == c &amp;&amp; <span class="fu">_execute</span>(pc+<span class="dv">1</span>, i+<span class="dv">1</span>)</a>
+<a class="sourceLine" id="cb14-7" data-line-number="7">        <span class="kw">case</span> <span class="fu">Jump</span>(label) =&gt; <span class="fu">_execute</span>(label, i)</a>
+<a class="sourceLine" id="cb14-8" data-line-number="8">        <span class="kw">case</span> <span class="fu">Split</span>(label1, label2) =&gt; <span class="fu">_execute</span>(label1, i) || <span class="fu">_execute</span>(label2, i)</a>
+<a class="sourceLine" id="cb14-9" data-line-number="9">        <span class="kw">case</span> Match =&gt; i == s.<span class="fu">size</span></a>
+<a class="sourceLine" id="cb14-10" data-line-number="10">      }</a>
+<a class="sourceLine" id="cb14-11" data-line-number="11">    }</a>
+<a class="sourceLine" id="cb14-12" data-line-number="12">    <span class="fu">_execute</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb14-13" data-line-number="13">  }</a>
+<a class="sourceLine" id="cb14-14" data-line-number="14">}</a></code></pre></div>
+<h2 id="execute-の概要-12"><code>execute</code> の概要 (1/2)</h2>
+<div class="sourceCode" id="cb15"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb15-1" data-line-number="1"><span class="kw">def</span> <span class="fu">execute</span>(_program, s): Boolean = {</a>
+<a class="sourceLine" id="cb15-2" data-line-number="2">  <span class="kw">val</span> program = _program.<span class="fu">toArray</span></a>
+<a class="sourceLine" id="cb15-3" data-line-number="3">  <span class="kw">def</span> <span class="fu">_execute</span>(pc, i) = {</a>
+<a class="sourceLine" id="cb15-4" data-line-number="4">    <span class="fu">program</span>(pc) <span class="kw">match</span> {</a>
+<a class="sourceLine" id="cb15-5" data-line-number="5">      <span class="kw">case</span> Character(c) =&gt; ...</a>
+<a class="sourceLine" id="cb15-6" data-line-number="6">      <span class="kw">case</span> <span class="fu">Jump</span>(label) =&gt; ...</a>
+<a class="sourceLine" id="cb15-7" data-line-number="7">      <span class="kw">case</span> <span class="fu">Split</span>(label1, label2) =&gt; ...</a>
+<a class="sourceLine" id="cb15-8" data-line-number="8">      <span class="kw">case</span> Match =&gt; ...</a>
+<a class="sourceLine" id="cb15-9" data-line-number="9">    }</a>
+<a class="sourceLine" id="cb15-10" data-line-number="10">  }</a>
+<a class="sourceLine" id="cb15-11" data-line-number="11">  <span class="fu">_execute</span>(<span class="dv">0</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb15-12" data-line-number="12">}</a></code></pre></div>
+<ul>
+<li><p><em>pc</em>: 次に実行するのは<span class="math inline">\(program\)</span>中の第<span class="math inline">\(pc\)</span>番目の命令</p></li>
+<li><p><em>i</em>: 次に読み込む文字は入力文字列<span class="math inline">\(s\)</span>中の第<span class="math inline">\(i\)</span>番目</p></li>
+<li><p><code>execute(0, 0): 初期状態は</code>execute(pc = 0, i = 0)`</p></li>
+</ul>
+<h2 id="execute-の概要-22"><code>execute</code> の概要 (2/2)</h2>
+<ul>
+<li><p><code>Character(c) =&gt; i &lt; s.size &amp;&amp; s(i) == c &amp;&amp; _execute(pc+1, i+1)</code></p>
+<p>文字列を読み過ぎようとしたら非受理，そうでなければ次の文字(i + 1)について次の命令(pc + 1)を実行</p></li>
+<li><p><code>Jump(label) =&gt; _execute(label, i)</code></p>
+<p>指定されたラベルの命令を実行(pc = label)</p></li>
+<li><p><code>Split(label1, label2) =&gt; _execute(label1, i) || _execute(label2, i)</code></p>
+<p>label1 からの実行，あるいは label2 からの実行のいずれかが成功すれば受理</p></li>
+<li><p><code>Match =&gt; i == s.size</code></p>
+<p>すべての文字列を読み切っていたら受理．ここでの条件を <code>true</code> にすれば <code>findPrefixOf</code> のような機能になる．</p></li>
+</ul>
+<h2 id="object-iterativebackgrackingvm-の概要"><strong>object</strong> IterativeBackgrackingVM の概要</h2>
+<div class="sourceCode" id="cb16"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb16-1" data-line-number="1"><span class="kw">def</span> <span class="fu">execute</span>(_program: Program, s: String): Boolean = {</a>
+<a class="sourceLine" id="cb16-2" data-line-number="2">  <span class="kw">var</span> threads = Queue[(ProgramCounter, StringIndex)]((<span class="dv">0</span>, <span class="dv">0</span>))</a>
+<a class="sourceLine" id="cb16-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb16-4" data-line-number="4">  <span class="kw">while</span> (!threads.<span class="fu">isEmpty</span>) { <span class="co">// スレッドプールが空になるまで</span></a>
+<a class="sourceLine" id="cb16-5" data-line-number="5">    <span class="kw">val</span> ((_pc, _i), rest) = threads.<span class="fu">dequeue</span></a>
+<a class="sourceLine" id="cb16-6" data-line-number="6">    threads = rest</a>
+<a class="sourceLine" id="cb16-7" data-line-number="7">    <span class="kw">var</span> pc  = _pc</a>
+<a class="sourceLine" id="cb16-8" data-line-number="8">    <span class="kw">var</span> i   = _i</a>
+<a class="sourceLine" id="cb16-9" data-line-number="9"></a>
+<a class="sourceLine" id="cb16-10" data-line-number="10">    <span class="kw">try</span> { <span class="co">// スレッドの実行</span></a>
+<a class="sourceLine" id="cb16-11" data-line-number="11">      <span class="kw">while</span> (<span class="kw">true</span>) { <span class="fu">program</span>(pc) <span class="kw">match</span> { <span class="co">/* 命令の識別と処理 */</span>  } }</a>
+<a class="sourceLine" id="cb16-12" data-line-number="12">    } <span class="kw">catch</span> { <span class="kw">case</span> MatchFailure =&gt; () }</a>
+<a class="sourceLine" id="cb16-13" data-line-number="13">  }</a>
+<a class="sourceLine" id="cb16-14" data-line-number="14">  <span class="kw">false</span> <span class="co">// すべてのスレッドが尽きたら非受理</span></a>
+<a class="sourceLine" id="cb16-15" data-line-number="15">}</a></code></pre></div>
+<h2 id="thompsonvm-の概要">ThompsonVM の概要</h2>
+<div class="sourceCode" id="cb17"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb17-1" data-line-number="1"><span class="kw">def</span> <span class="fu">execute</span>(_program, s) = {</a>
+<a class="sourceLine" id="cb17-2" data-line-number="2">  <span class="kw">var</span> threads = Set[ProgramCounter](<span class="dv">0</span>)  <span class="co">// i文字目を処理したがっているスレッドたち</span></a>
+<a class="sourceLine" id="cb17-3" data-line-number="3"></a>
+<a class="sourceLine" id="cb17-4" data-line-number="4">  <span class="kw">for</span> (i &lt;- <span class="dv">0</span> to s.<span class="fu">length</span>) {</a>
+<a class="sourceLine" id="cb17-5" data-line-number="5">    <span class="kw">var</span> nextThreads = Set[ProgramCounter]()  <span class="co">// i+1文字目を処理したがっているスレッドたち</span></a>
+<a class="sourceLine" id="cb17-6" data-line-number="6">    <span class="kw">while</span> (!threads.<span class="fu">isEmpty</span>) {</a>
+<a class="sourceLine" id="cb17-7" data-line-number="7">      <span class="kw">val</span> pc = threads.<span class="fu">head</span></a>
+<a class="sourceLine" id="cb17-8" data-line-number="8">      threads = threads - pc</a>
+<a class="sourceLine" id="cb17-9" data-line-number="9">      <span class="fu">program</span>(pc) <span class="kw">match</span> { <span class="co">/* 命令の識別と処理 */</span> }</a>
+<a class="sourceLine" id="cb17-10" data-line-number="10">    }</a>
+<a class="sourceLine" id="cb17-11" data-line-number="11">    threads = nextThreads</a>
+<a class="sourceLine" id="cb17-12" data-line-number="12">  }</a>
+<a class="sourceLine" id="cb17-13" data-line-number="13">  <span class="kw">false</span></a>
+<a class="sourceLine" id="cb17-14" data-line-number="14">}</a></code></pre></div>
+<ul>
+<li><p>妙にすっきりしてないか？ループはスレッドについてのものだけ．スレッド内の命令列を順次処理するコードはどこに行った？</p>
+<ul>
+<li><code>case Jump(label) =&gt; threads = threads + label</code> – これは何？</li>
+<li><code>case Split(label1, label2) =&gt; threads = threads + label1 + label2</code> – これはまた何？</li>
+</ul></li>
+</ul>
+<h2 id="thompsonvm-発想の転換">ThompsonVM: 発想の転換</h2>
+<ul>
+<li><p>RecursiveBacktrackingVM と IterativeBacktrackingVM</p>
+<p>各スレッドについて，そのスレッドが誕生した状態からオートマトンを動かして，それぞれ受理するかどうか観察しましょう．</p></li>
+<li><p>ThompsonVM</p>
+<p>文字列を先頭から眺めて，その文字を読み込もうとするスレッド群を順次更新する方法．気分的には <span class="math inline">\(\mathit {threads}_0\)</span>, <span class="math inline">\(\mathit {threads}_1\)</span>, … を順次生成し，<span class="math inline">\(\mathit {threads}_n\)</span> のなかに受理するものがあるか観察しましょう．</p></li>
+</ul>
+<hr />
+<ul>
+<li><p><a href="/y18-prg1/note/">トップページへ</a></p></li>
+<li><p><a href="https://github.com/wakita/y18-prg1">GitHubへ</a></p></li>
+</ul>
+</body>
+</html>
