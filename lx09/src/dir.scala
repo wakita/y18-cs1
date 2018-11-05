@@ -17,7 +17,7 @@ object Directories {
     rec(root, 0)
   }
 
-  def df_traverse(root: File, pattern: scala.util.matching.Regex) = {
+  def df_search(root: File, pattern: scala.util.matching.Regex) = {
     def rec(dir: File) : Option[String] = {
       val children = dir.listFiles
       for (f <- children.filter(_.isFile)) {
@@ -61,7 +61,7 @@ object Directories {
     df_traverse(root, 3)
 
     println(f"\n${root.getPath}以下にあるファイルでファイル名が15文字以上、拡張子が3文字以上のもので最初に見つかったもの")
-    println(df_traverse(root, "^[a-zA-Z0-9]{15,}\\.[a-z]{3,}$".r))
+    println(df_search(root, "^[a-zA-Z0-9]{15,}\\.[a-z]{3,}$".r))
 
     println(f"\n${root.getPath}以下にあるファイルの個数を深さごとに集計したもの")
     n_files(root)
