@@ -2,7 +2,7 @@
   <meta charset="utf-8">
   <meta name="generator" content="pandoc">
   <meta name="author" content="Ken Wakita (https://is-prg1b.github.io/lecture/)">
-  <title>PRG (11): 並行計算と並列実行</title>
+  <title>PRG (10): 並行計算と並列実行</title>
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
@@ -15,7 +15,7 @@
   <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -28,13 +28,11 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
+  { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
-  { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -132,15 +130,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 #MathJax_Message {position: fixed; left: 1px; bottom: 2px; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
 #MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
 .MathJax_Error {color: #CC0000; font-style: italic}
-</style><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/contrib/a11y/accessibility-menu.js?V=2.7.0"></script></head>
-<body style="-webkit-transition: -webkit-transform 0.8s ease; transition: -webkit-transform 0.8s ease;"><div id="MathJax_Message" style="display: none;"></div>
+</style></head>
+<body style="-webkit-transition: -webkit-transform 0.8s ease; transition: -webkit-transform 0.8s ease;">
   <div class="reveal slide center has-vertical-slides has-horizontal-slides ready" role="application" data-transition-speed="default" data-background-transition="fade">
     <div class="slides" style="width: 1280px; height: 1024px; left: 50%; top: 50%; bottom: auto; right: auto; -webkit-transform: translate(-50%, -50%) scale(0.28125);">
 
 <section style="top: 229px; display: block;" class="present">
-  <h1 class="title">PRG (11): 並行計算と並列実行</h1>
-  <p class="author">Ken Wakita (<a href="https://is-prg1b.github.io/lecture/" class="uri">https://is-prg1b.github.io/lecture/</a>)</p>
-  <p class="date">2017.11.10</p>
+  <h1 class="title">PRG (10): 並行計算と並列実行</h1>
+  <p class="author">Ken Wakita (<a href="https://is-prg1b.github.io/lecture/">https://is-prg1b.github.io/lecture/</a>)</p>
+  <p class="date">2018.11.9</p>
 </section>
 
 <section style="top: 0px; display: block;" hidden="" aria-hidden="true" class="stack future"><section id="目次" class="title-slide slide level1" style="top: 391.5px; display: block;"><h1>目次</h1></section><section id="目次-1" class="slide level2 future" aria-hidden="true" style="top: 278px; display: block;">
@@ -182,20 +180,20 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 </section><section id="future-計算" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
 <h2>Future 計算</h2>
-<div class="sourceCode" id="cb1"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb1-1" data-line-number="1">Future {</a>
-<a class="sourceLine" id="cb1-2" data-line-number="2">  処理内容</a>
-<a class="sourceLine" id="cb1-3" data-line-number="3">  計算結果: T</a>
-<a class="sourceLine" id="cb1-4" data-line-number="4">} : Future[T]</a></code></pre></div>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb1-1" title="1">Future {</a>
+<a class="sourceLine" id="cb1-2" title="2">  処理内容</a>
+<a class="sourceLine" id="cb1-3" title="3">  計算結果: T</a>
+<a class="sourceLine" id="cb1-4" title="4">} : Future[T]</a></code></pre></div>
 <ul>
 <li><p>Future オブジェクト：どこかで計算を実行し，いずれ計算が終わった暁には，その答えをくれるオブジェクト．</p></li>
 <li><p>計算結果の型が <code>T</code> のとき，Future オブジェクトの型は <code>Future[T]</code></p></li>
-<li><p>Future オブジェクトの <code>foreach</code> メソッドを介して，実行結果を入手する．</p></li>
 </ul>
+<!-- - Future オブジェクトの `foreach` メソッドを介して，実行結果を入手する． -->
 </section><section id="future-計算の例" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
 <h2>Future 計算の例</h2>
-<div class="sourceCode" id="cb2"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb2-1" data-line-number="1"><span class="fu">f</span>()</a>
-<a class="sourceLine" id="cb2-2" data-line-number="2">Future { <span class="fu">g</span>() }</a>
-<a class="sourceLine" id="cb2-3" data-line-number="3"><span class="fu">h</span>()</a></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb2-1" title="1"><span class="fu">f</span>()</a>
+<a class="sourceLine" id="cb2-2" title="2">Future { <span class="fu">g</span>() }</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="fu">h</span>()</a></code></pre></div>
 <ol type="1">
 <li><p><code>f()</code> を実行する．</p></li>
 <li><p><code>g()</code> を計算する　Future オブジェクトを生成する．</p>
@@ -211,36 +209,36 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p><code>Thread.sleep(Xミリ秒)</code></p>
 <p>スレッドの実行を引数で指定したミリ秒間だけ停止</p></li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb3-1" data-line-number="1">(* 実行例 (project lx11) runMain bakery loop *)</a>
-<a class="sourceLine" id="cb3-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb3-3" data-line-number="3">  <span class="kw">def</span> <span class="fu">loop</span>(secs_limit: Int) {</a>
-<a class="sourceLine" id="cb3-4" data-line-number="4">    <span class="co">// secs_limit秒経過するまでループ終了</span></a>
-<a class="sourceLine" id="cb3-5" data-line-number="5">    <span class="kw">val</span> nano_limit = secs_limit * NANO  <span class="co">// ナノ秒に換算</span></a>
-<a class="sourceLine" id="cb3-6" data-line-number="6">    <span class="kw">val</span> t_start = System.<span class="fu">nanoTime</span>()     <span class="co">// ループを開始した時刻</span></a>
-<a class="sourceLine" id="cb3-7" data-line-number="7">    <span class="kw">for</span> (t &lt;- <span class="dv">1</span> to Int.<span class="fu">MaxValue</span>) {</a>
-<a class="sourceLine" id="cb3-8" data-line-number="8">      <span class="kw">if</span> (System.<span class="fu">nanoTime</span>() - t_start &gt; nano_limit) <span class="kw">return</span></a>
-<a class="sourceLine" id="cb3-9" data-line-number="9">      Thread.<span class="fu">sleep</span>(<span class="dv">1000</span>)                <span class="co">// 1,000ミリ秒 = 1秒お休み</span></a>
-<a class="sourceLine" id="cb3-10" data-line-number="10">      <span class="fu">println</span>(f<span class="st">"t = $t%2d"</span>)</a>
-<a class="sourceLine" id="cb3-11" data-line-number="11">    }</a>
-<a class="sourceLine" id="cb3-12" data-line-number="12">  }</a></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb3-1" title="1">(* 実行例 (project lx11) runMain bakery loop *)</a>
+<a class="sourceLine" id="cb3-2" title="2"></a>
+<a class="sourceLine" id="cb3-3" title="3">  <span class="kw">def</span> <span class="fu">loop</span>(secs_limit: Int) {</a>
+<a class="sourceLine" id="cb3-4" title="4">    <span class="co">// secs_limit秒経過するまでループ終了</span></a>
+<a class="sourceLine" id="cb3-5" title="5">    <span class="kw">val</span> nano_limit = secs_limit * NANO  <span class="co">// ナノ秒に換算</span></a>
+<a class="sourceLine" id="cb3-6" title="6">    <span class="kw">val</span> t_start = System.<span class="fu">nanoTime</span>()     <span class="co">// ループを開始した時刻</span></a>
+<a class="sourceLine" id="cb3-7" title="7">    <span class="kw">for</span> (t &lt;- <span class="dv">1</span> to Int.<span class="fu">MaxValue</span>) {</a>
+<a class="sourceLine" id="cb3-8" title="8">      <span class="kw">if</span> (System.<span class="fu">nanoTime</span>() - t_start &gt; nano_limit) <span class="kw">return</span></a>
+<a class="sourceLine" id="cb3-9" title="9">      Thread.<span class="fu">sleep</span>(<span class="dv">1000</span>)                <span class="co">// 1,000ミリ秒 = 1秒お休み</span></a>
+<a class="sourceLine" id="cb3-10" title="10">      <span class="fu">println</span>(f<span class="st">"t = $t%2d"</span>)</a>
+<a class="sourceLine" id="cb3-11" title="11">    }</a>
+<a class="sourceLine" id="cb3-12" title="12">  }</a></code></pre></div>
 </section><section id="例題パン屋さん一人営業の場合" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
 <h2>例題：パン屋さん（一人営業の場合）</h2>
 <ul>
 <li>一人営業なので並列性がない = シングルスレッド</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb4-1" data-line-number="1">(* 実行例 (project lx11) runMain bakery seq *)</a>
-<a class="sourceLine" id="cb4-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb4-3" data-line-number="3">  <span class="kw">def</span> <span class="fu">sequential</span>(secs_limit: Int) {</a>
-<a class="sourceLine" id="cb4-4" data-line-number="4">    ...</a>
-<a class="sourceLine" id="cb4-5" data-line-number="5">    <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to Int.<span class="fu">MaxValue</span>) {</a>
-<a class="sourceLine" id="cb4-6" data-line-number="6">      ...</a>
-<a class="sourceLine" id="cb4-7" data-line-number="7">      <span class="fu">printbakery</span>(<span class="st">"仕事を始めましょう"</span>)</a>
-<a class="sourceLine" id="cb4-8" data-line-number="8">      Thread.<span class="fu">sleep</span>(<span class="dv">3000</span>);  <span class="fu">printbakery</span>(<span class="st">"パン生地ができました。"</span>)</a>
-<a class="sourceLine" id="cb4-9" data-line-number="9">      Thread.<span class="fu">sleep</span>(<span class="dv">5000</span>);  <span class="fu">printbakery</span>(<span class="st">"パンが焼きあがりました。"</span>)</a>
-<a class="sourceLine" id="cb4-10" data-line-number="10">      Thread.<span class="fu">sleep</span>(<span class="dv">7000</span>);  <span class="fu">printbakery</span>(<span class="st">"パンをお店に出しました。"</span>)</a>
-<a class="sourceLine" id="cb4-11" data-line-number="11">      Thread.<span class="fu">sleep</span>(<span class="dv">10000</span>); <span class="fu">printbakery</span>(<span class="st">"パンをレストランに届けました。"</span>)</a>
-<a class="sourceLine" id="cb4-12" data-line-number="12">    }</a>
-<a class="sourceLine" id="cb4-13" data-line-number="13">  }</a></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb4-1" title="1">(* 実行例 (project lx11) runMain bakery seq *)</a>
+<a class="sourceLine" id="cb4-2" title="2"></a>
+<a class="sourceLine" id="cb4-3" title="3">  <span class="kw">def</span> <span class="fu">sequential</span>(secs_limit: Int) {</a>
+<a class="sourceLine" id="cb4-4" title="4">    ...</a>
+<a class="sourceLine" id="cb4-5" title="5">    <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to Int.<span class="fu">MaxValue</span>) {</a>
+<a class="sourceLine" id="cb4-6" title="6">      ...</a>
+<a class="sourceLine" id="cb4-7" title="7">      <span class="fu">printbakery</span>(<span class="st">"仕事を始めましょう"</span>)</a>
+<a class="sourceLine" id="cb4-8" title="8">      Thread.<span class="fu">sleep</span>(<span class="dv">3000</span>);  <span class="fu">printbakery</span>(<span class="st">"パン生地ができました。"</span>)</a>
+<a class="sourceLine" id="cb4-9" title="9">      Thread.<span class="fu">sleep</span>(<span class="dv">5000</span>);  <span class="fu">printbakery</span>(<span class="st">"パンが焼きあがりました。"</span>)</a>
+<a class="sourceLine" id="cb4-10" title="10">      Thread.<span class="fu">sleep</span>(<span class="dv">7000</span>);  <span class="fu">printbakery</span>(<span class="st">"パンをお店に出しました。"</span>)</a>
+<a class="sourceLine" id="cb4-11" title="11">      Thread.<span class="fu">sleep</span>(<span class="dv">10000</span>); <span class="fu">printbakery</span>(<span class="st">"パンをレストランに届けました。"</span>)</a>
+<a class="sourceLine" id="cb4-12" title="12">    }</a>
+<a class="sourceLine" id="cb4-13" title="13">  }</a></code></pre></div>
 </section><section id="例題パン工場店主のほかに職人が四人の場合" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
 <h2>例題：パン工場（店主のほかに職人が四人の場合）</h2>
 <ul>
@@ -252,39 +250,39 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 </section><section id="例題パン工場店主" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
 <h2>例題：パン工場（店主）</h2>
-<div class="sourceCode" id="cb5"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb5-1" data-line-number="1">    <span class="fu">println</span>(<span class="st">"さあ、パン屋を開きましょう。"</span>)</a>
-<a class="sourceLine" id="cb5-2" data-line-number="2">    Thread.<span class="fu">sleep</span>(secs_limit * <span class="dv">1000</span>)</a>
-<a class="sourceLine" id="cb5-3" data-line-number="3">    <span class="fu">println</span>(<span class="st">"今日はもう閉店です。"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb5-1" title="1">    <span class="fu">println</span>(<span class="st">"さあ、パン屋を開きましょう。"</span>)</a>
+<a class="sourceLine" id="cb5-2" title="2">    Thread.<span class="fu">sleep</span>(secs_limit * <span class="dv">1000</span>)</a>
+<a class="sourceLine" id="cb5-3" title="3">    <span class="fu">println</span>(<span class="st">"今日はもう閉店です。"</span>)</a></code></pre></div>
 </section><section id="例題パン工場こね方ン込ね職人のスレッド" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
 <h2>例題：パン工場（こね方ン込ね職人のスレッド</h2>
-<div class="sourceCode" id="cb6"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb6-1" data-line-number="1">    Future {</a>
-<a class="sourceLine" id="cb6-2" data-line-number="2">      <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to Int.<span class="fu">MaxValue</span>) {</a>
-<a class="sourceLine" id="cb6-3" data-line-number="3">        Thread.<span class="fu">sleep</span>(<span class="dv">3000</span>)</a>
-<a class="sourceLine" id="cb6-4" data-line-number="4">        <span class="fu">printbakery</span>(i, <span class="st">"パン生地ができました。"</span>)</a>
-<a class="sourceLine" id="cb6-5" data-line-number="5">      }</a>
-<a class="sourceLine" id="cb6-6" data-line-number="6">    }</a></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb6-1" title="1">    Future {</a>
+<a class="sourceLine" id="cb6-2" title="2">      <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to Int.<span class="fu">MaxValue</span>) {</a>
+<a class="sourceLine" id="cb6-3" title="3">        Thread.<span class="fu">sleep</span>(<span class="dv">3000</span>)</a>
+<a class="sourceLine" id="cb6-4" title="4">        <span class="fu">printbakery</span>(i, <span class="st">"パン生地ができました。"</span>)</a>
+<a class="sourceLine" id="cb6-5" title="5">      }</a>
+<a class="sourceLine" id="cb6-6" title="6">    }</a></code></pre></div>
 </section><section id="例題パン工場ほかの職人" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
 <h2>例題：パン工場（ほかの職人）</h2>
-<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb7-1" data-line-number="1">    <span class="co">// ほかの職人たちの仕事の内容</span></a>
-<a class="sourceLine" id="cb7-2" data-line-number="2">    <span class="kw">for</span> ((t, message) &lt;-</a>
-<a class="sourceLine" id="cb7-3" data-line-number="3">         List((<span class="dv">5000</span>, <span class="st">"パンが焼きあがりました。"</span>),</a>
-<a class="sourceLine" id="cb7-4" data-line-number="4">           (<span class="dv">7000</span>, <span class="st">"パンをお店に出しました。"</span>),</a>
-<a class="sourceLine" id="cb7-5" data-line-number="5">           (<span class="dv">10000</span>, <span class="st">"パンをレストランに届けました。"</span>))) {</a>
-<a class="sourceLine" id="cb7-6" data-line-number="6">       Future {</a>
-<a class="sourceLine" id="cb7-7" data-line-number="7">         <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to Int.<span class="fu">MaxValue</span>) {</a>
-<a class="sourceLine" id="cb7-8" data-line-number="8">           Thread.<span class="fu">sleep</span>(t)</a>
-<a class="sourceLine" id="cb7-9" data-line-number="9">           <span class="fu">printbakery</span>(i, message)</a>
-<a class="sourceLine" id="cb7-10" data-line-number="10">         }</a>
-<a class="sourceLine" id="cb7-11" data-line-number="11">       }</a>
-<a class="sourceLine" id="cb7-12" data-line-number="12">     }</a></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb7-1" title="1">    <span class="co">// ほかの職人たちの仕事の内容</span></a>
+<a class="sourceLine" id="cb7-2" title="2">    <span class="kw">for</span> ((t, message) &lt;-</a>
+<a class="sourceLine" id="cb7-3" title="3">         List((<span class="dv">5000</span>, <span class="st">"パンが焼きあがりました。"</span>),</a>
+<a class="sourceLine" id="cb7-4" title="4">           (<span class="dv">7000</span>, <span class="st">"パンをお店に出しました。"</span>),</a>
+<a class="sourceLine" id="cb7-5" title="5">           (<span class="dv">10000</span>, <span class="st">"パンをレストランに届けました。"</span>))) {</a>
+<a class="sourceLine" id="cb7-6" title="6">       Future {</a>
+<a class="sourceLine" id="cb7-7" title="7">         <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to Int.<span class="fu">MaxValue</span>) {</a>
+<a class="sourceLine" id="cb7-8" title="8">           Thread.<span class="fu">sleep</span>(t)</a>
+<a class="sourceLine" id="cb7-9" title="9">           <span class="fu">printbakery</span>(i, message)</a>
+<a class="sourceLine" id="cb7-10" title="10">         }</a>
+<a class="sourceLine" id="cb7-11" title="11">       }</a>
+<a class="sourceLine" id="cb7-12" title="12">     }</a></code></pre></div>
 </section></section>
 <section style="top: 512px; display: none;" hidden="" aria-hidden="true" class="stack future"><section id="データ並列処理" class="title-slide slide level1" style="top: 512px; display: none;"><h1>データ並列処理</h1></section><section id="並列リスト-list.par" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
 <h2>並列リスト <code>list.par</code></h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb8-1" data-line-number="1"><span class="kw">val</span> list  = (<span class="dv">1</span> to <span class="dv">1000</span>).<span class="fu">toList</span></a>
-<a class="sourceLine" id="cb8-2" data-line-number="2"><span class="kw">val</span> plist = (<span class="dv">1</span> to <span class="dv">1000</span>).<span class="fu">toList</span>.<span class="fu">par</span></a>
-<a class="sourceLine" id="cb8-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb8-4" data-line-number="4"><span class="kw">val</span> vec   = (<span class="dv">0</span> until N).<span class="fu">toArray</span></a>
-<a class="sourceLine" id="cb8-5" data-line-number="5"><span class="kw">val</span> pvec  = (<span class="dv">0</span> until N).<span class="fu">toArray</span>.<span class="fu">par</span></a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">val</span> list  = (<span class="dv">1</span> to <span class="dv">1000</span>).<span class="fu">toList</span></a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="kw">val</span> plist = (<span class="dv">1</span> to <span class="dv">1000</span>).<span class="fu">toList</span>.<span class="fu">par</span></a>
+<a class="sourceLine" id="cb8-3" title="3"></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="kw">val</span> vec   = (<span class="dv">0</span> until N).<span class="fu">toArray</span></a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="kw">val</span> pvec  = (<span class="dv">0</span> until N).<span class="fu">toArray</span>.<span class="fu">par</span></a></code></pre></div>
 <ul>
 <li><p><code>list</code>: 普通のリスト．長さ 1,000 で，要素として 1, 2, …, 1,000 を持っている</p></li>
 <li><p><code>plist</code>: 並列リスト．<code>list</code> と同じ長さ，同じ内容だが，多くのメソッドが並列化されている．</p></li>
@@ -293,15 +291,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 </section><section id="逐次実行" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
 <h2>逐次実行</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb9-1" data-line-number="1">    <span class="kw">val</span> c = <span class="dv">100</span>; <span class="kw">var</span> a = <span class="dv">0</span></a>
-<a class="sourceLine" id="cb9-2" data-line-number="2">    {</a>
-<a class="sourceLine" id="cb9-3" data-line-number="3">      <span class="kw">val</span> t_start = System.<span class="fu">nanoTime</span>()</a>
-<a class="sourceLine" id="cb9-4" data-line-number="4">      <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to c) {</a>
-<a class="sourceLine" id="cb9-5" data-line-number="5">        <span class="kw">val</span> vecfib = vec.<span class="fu">map</span>((v: Int) =&gt; <span class="fu">fib</span>(v % <span class="dv">1000</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb9-6" data-line-number="6">        a = a + <span class="fu">vecfib</span>(Random.<span class="fu">nextInt</span>(vecfib.<span class="fu">length</span>))</a>
-<a class="sourceLine" id="cb9-7" data-line-number="7">      }</a>
-<a class="sourceLine" id="cb9-8" data-line-number="8">      <span class="fu">println</span>(f<span class="st">"${(System.nanoTime() - t_start) * 1e-9}%2.2fsec"</span>)</a>
-<a class="sourceLine" id="cb9-9" data-line-number="9">    }</a></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb9-1" title="1">    <span class="kw">val</span> c = <span class="dv">100</span>; <span class="kw">var</span> a = <span class="dv">0</span></a>
+<a class="sourceLine" id="cb9-2" title="2">    {</a>
+<a class="sourceLine" id="cb9-3" title="3">      <span class="kw">val</span> t_start = System.<span class="fu">nanoTime</span>()</a>
+<a class="sourceLine" id="cb9-4" title="4">      <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to c) {</a>
+<a class="sourceLine" id="cb9-5" title="5">        <span class="kw">val</span> vecfib = vec.<span class="fu">map</span>((v: Int) =&gt; <span class="fu">fib</span>(v % <span class="dv">1000</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb9-6" title="6">        a = a + <span class="fu">vecfib</span>(Random.<span class="fu">nextInt</span>(vecfib.<span class="fu">length</span>))</a>
+<a class="sourceLine" id="cb9-7" title="7">      }</a>
+<a class="sourceLine" id="cb9-8" title="8">      <span class="fu">println</span>(f<span class="st">"${(System.nanoTime() - t_start) * 1e-9}%2.2fsec"</span>)</a>
+<a class="sourceLine" id="cb9-9" title="9">    }</a></code></pre></div>
 <ul>
 <li><p><code>list</code> の各要素 <span class="math inline">\(v\)</span> についてフィボナッチ数を計算した結果を収集</p></li>
 <li><p><code>a</code>: 配列から無作為に選択した要素の値．Scala コンパイラの最適化器がフィボナッチ数の計算結果がどこでも使用されていないことに気づいた場合は，計算を省略する最適化を施す可能性がある．一見，無駄な<code>a</code>を計算取得することでそのような最適化を抑制している．</p></li>
@@ -313,15 +311,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </ul>
 </section><section id="並列実行" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
 <h2>並列実行</h2>
-<div class="sourceCode" id="cb10"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb10-1" data-line-number="1">    <span class="kw">val</span> c = <span class="dv">100</span>; <span class="kw">var</span> a = <span class="dv">0</span></a>
-<a class="sourceLine" id="cb10-2" data-line-number="2">    {</a>
-<a class="sourceLine" id="cb10-3" data-line-number="3">      <span class="kw">val</span> t_start = System.<span class="fu">nanoTime</span>()</a>
-<a class="sourceLine" id="cb10-4" data-line-number="4">      <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to c) {</a>
-<a class="sourceLine" id="cb10-5" data-line-number="5">        <span class="kw">val</span> vecfib = pvec.<span class="fu">map</span>((v: Int) =&gt; <span class="fu">fib</span>(v % <span class="dv">1000</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</a>
-<a class="sourceLine" id="cb10-6" data-line-number="6">        a = a + <span class="fu">vecfib</span>(Random.<span class="fu">nextInt</span>(vecfib.<span class="fu">length</span>))</a>
-<a class="sourceLine" id="cb10-7" data-line-number="7">      }</a>
-<a class="sourceLine" id="cb10-8" data-line-number="8">      <span class="fu">println</span>(f<span class="st">"${(System.nanoTime() - t_start) * 1e-9}%2.2fsec"</span>)</a>
-<a class="sourceLine" id="cb10-9" data-line-number="9">    }</a></code></pre></div>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb10-1" title="1">    <span class="kw">val</span> c = <span class="dv">100</span>; <span class="kw">var</span> a = <span class="dv">0</span></a>
+<a class="sourceLine" id="cb10-2" title="2">    {</a>
+<a class="sourceLine" id="cb10-3" title="3">      <span class="kw">val</span> t_start = System.<span class="fu">nanoTime</span>()</a>
+<a class="sourceLine" id="cb10-4" title="4">      <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to c) {</a>
+<a class="sourceLine" id="cb10-5" title="5">        <span class="kw">val</span> vecfib = pvec.<span class="fu">map</span>((v: Int) =&gt; <span class="fu">fib</span>(v % <span class="dv">1000</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="dv">1</span>))</a>
+<a class="sourceLine" id="cb10-6" title="6">        a = a + <span class="fu">vecfib</span>(Random.<span class="fu">nextInt</span>(vecfib.<span class="fu">length</span>))</a>
+<a class="sourceLine" id="cb10-7" title="7">      }</a>
+<a class="sourceLine" id="cb10-8" title="8">      <span class="fu">println</span>(f<span class="st">"${(System.nanoTime() - t_start) * 1e-9}%2.2fsec"</span>)</a>
+<a class="sourceLine" id="cb10-9" title="9">    }</a></code></pre></div>
 <ul>
 <li><p>さっきとほとんど同じコード．異なるのは <code>vec.map</code> か <code>pvec.map</code> の点だけ．</p>
 <p>ここでは並列化された配列を利用している．</p></li>
@@ -334,31 +332,31 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 </section><section id="並列実行の例" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
 <h2>並列実行の例</h2>
 <p>文字列のリストに対する並列map</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb11-1" data-line-number="1">    <span class="co">// project lx11; runMain Par map</span></a>
-<a class="sourceLine" id="cb11-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb11-3" data-line-number="3">    <span class="kw">val</span> lastNames = List(<span class="st">"Smith"</span>,<span class="st">"Jones"</span>,<span class="st">"Frankenstein"</span>,<span class="st">"Bach"</span>,<span class="st">"Jackson"</span>,<span class="st">"Rodin"</span>).<span class="fu">par</span></a>
-<a class="sourceLine" id="cb11-4" data-line-number="4">    <span class="fu">print</span>(lastNames.<span class="fu">map</span>((name: String) =&gt; name.<span class="fu">toUpperCase</span>))</a></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb11-1" title="1">    <span class="co">// project lx11; runMain Par map</span></a>
+<a class="sourceLine" id="cb11-2" title="2"></a>
+<a class="sourceLine" id="cb11-3" title="3">    <span class="kw">val</span> lastNames = List(<span class="st">"Smith"</span>,<span class="st">"Jones"</span>,<span class="st">"Frankenstein"</span>,<span class="st">"Bach"</span>,<span class="st">"Jackson"</span>,<span class="st">"Rodin"</span>).<span class="fu">par</span></a>
+<a class="sourceLine" id="cb11-4" title="4">    <span class="fu">print</span>(lastNames.<span class="fu">map</span>((name: String) =&gt; name.<span class="fu">toUpperCase</span>))</a></code></pre></div>
 <p>数値配列上の並列fold</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb12-1" data-line-number="1">    <span class="co">// project lx11; runMain Par fold</span></a>
-<a class="sourceLine" id="cb12-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb12-3" data-line-number="3">    <span class="kw">val</span> pvec = (<span class="dv">1</span> to <span class="dv">10000</span>).<span class="fu">toArray</span>.<span class="fu">par</span></a>
-<a class="sourceLine" id="cb12-4" data-line-number="4">    <span class="fu">println</span>(f<span class="st">"1 + 2 + ... + 10000 = ${pvec.fold(0)(((accu: Int), (v: Int)) =&gt; accu + v)}"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb12-1" title="1">    <span class="co">// project lx11; runMain Par fold</span></a>
+<a class="sourceLine" id="cb12-2" title="2"></a>
+<a class="sourceLine" id="cb12-3" title="3">    <span class="kw">val</span> pvec = (<span class="dv">1</span> to <span class="dv">10000</span>).<span class="fu">toArray</span>.<span class="fu">par</span></a>
+<a class="sourceLine" id="cb12-4" title="4">    <span class="fu">println</span>(f<span class="st">"1 + 2 + ... + 10000 = ${pvec.fold(0)(((accu: Int), (v: Int)) =&gt; accu + v)}"</span>)</a></code></pre></div>
 </section><section id="注意並列データ型と副作用" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
 <h2>注意：並列データ型と副作用</h2>
 <p>並列計算の最中に並列データ構造を更新するのは危険</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb13-1" data-line-number="1">    <span class="co">// project lx11; runMain Par sideeffect</span></a>
-<a class="sourceLine" id="cb13-2" data-line-number="2"></a>
-<a class="sourceLine" id="cb13-3" data-line-number="3">    <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to <span class="dv">3</span>) {</a>
-<a class="sourceLine" id="cb13-4" data-line-number="4">      <span class="kw">var</span> sum = <span class="dv">0</span></a>
-<a class="sourceLine" id="cb13-5" data-line-number="5">      plist.<span class="fu">foreach</span>((v: Int) =&gt; sum = sum + v)</a>
-<a class="sourceLine" id="cb13-6" data-line-number="6">      <span class="fu">println</span>(f<span class="st">"sum = $sum"</span>)</a>
-<a class="sourceLine" id="cb13-7" data-line-number="7">    }</a></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb13-1" title="1">    <span class="co">// project lx11; runMain Par sideeffect</span></a>
+<a class="sourceLine" id="cb13-2" title="2"></a>
+<a class="sourceLine" id="cb13-3" title="3">    <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to <span class="dv">3</span>) {</a>
+<a class="sourceLine" id="cb13-4" title="4">      <span class="kw">var</span> sum = <span class="dv">0</span></a>
+<a class="sourceLine" id="cb13-5" title="5">      plist.<span class="fu">foreach</span>((v: Int) =&gt; sum = sum + v)</a>
+<a class="sourceLine" id="cb13-6" title="6">      <span class="fu">println</span>(f<span class="st">"sum = $sum"</span>)</a>
+<a class="sourceLine" id="cb13-7" title="7">    }</a></code></pre></div>
 <p>実行結果</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb14-1" data-line-number="1"><span class="co">// 1.7 GHz Intel Core i7, 2 cores</span></a>
-<a class="sourceLine" id="cb14-2" data-line-number="2">sum = <span class="dv">500500</span>, <span class="dv">498710</span>, <span class="dv">500500</span></a>
-<a class="sourceLine" id="cb14-3" data-line-number="3"></a>
-<a class="sourceLine" id="cb14-4" data-line-number="4"><span class="co">// 4.0 GHz Intel Core i7, 4 cores</span></a>
-<a class="sourceLine" id="cb14-5" data-line-number="5">sum = <span class="dv">489624</span>, <span class="dv">498601</span>, <span class="dv">495584</span></a></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb14-1" title="1"><span class="co">// 1.7 GHz Intel Core i7, 2 cores</span></a>
+<a class="sourceLine" id="cb14-2" title="2">sum = <span class="dv">500500</span>, <span class="dv">498710</span>, <span class="dv">500500</span></a>
+<a class="sourceLine" id="cb14-3" title="3"></a>
+<a class="sourceLine" id="cb14-4" title="4"><span class="co">// 4.0 GHz Intel Core i7, 4 cores</span></a>
+<a class="sourceLine" id="cb14-5" title="5">sum = <span class="dv">489624</span>, <span class="dv">498601</span>, <span class="dv">495584</span></a></code></pre></div>
 <ul>
 <li><p>正しい結果は 500500</p></li>
 <li><p>並列スレッド群が <code>sum</code> に同時に代入するときに一方の代入が無視されることが原因</p></li>
@@ -370,27 +368,27 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>並列配列，並列リスト等への並列計算は out of order 実行</p></li>
 <li><p>reduce 処理では結合律が重要</p></li>
 </ul>
-<div class="sourceCode" id="cb15"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb15-1" data-line-number="1">    <span class="co">// x + (y + z) == (x + y) + z</span></a>
-<a class="sourceLine" id="cb15-2" data-line-number="2">    <span class="fu">println</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">結合律が成立する演算に対しては結果は安定している"</span>)</a>
-<a class="sourceLine" id="cb15-3" data-line-number="3">    <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to <span class="dv">3</span>) <span class="fu">println</span>(plist.<span class="fu">reduce</span>((accu: Int, v: Int) =&gt; accu + v))</a>
-<a class="sourceLine" id="cb15-4" data-line-number="4">    <span class="co">// 結果: 500500, 500500, 500500</span></a>
-<a class="sourceLine" id="cb15-5" data-line-number="5"></a>
-<a class="sourceLine" id="cb15-6" data-line-number="6">    <span class="co">// x - (y - z) != (x - y) - z</span></a>
-<a class="sourceLine" id="cb15-7" data-line-number="7">    <span class="fu">println</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">結合律が成立しない演算だと結果は不確定"</span>)</a>
-<a class="sourceLine" id="cb15-8" data-line-number="8">    <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to <span class="dv">3</span>) <span class="fu">println</span>(plist.<span class="fu">reduce</span>((accu: Int, v: Int) =&gt; accu - v))</a>
-<a class="sourceLine" id="cb15-9" data-line-number="9">    <span class="co">// 結果は滅茶苦茶： 0, -144890, 497564</span></a>
-<a class="sourceLine" id="cb15-10" data-line-number="10"></a>
-<a class="sourceLine" id="cb15-11" data-line-number="11">    <span class="co">// s1 ++ s2 != s2 ++ s1</span></a>
-<a class="sourceLine" id="cb15-12" data-line-number="12">    <span class="co">// s1 ++ (s2 ++ s3) == (s1 ++ s2) ++ s3</span></a>
-<a class="sourceLine" id="cb15-13" data-line-number="13">    <span class="fu">println</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">交換律は成立しないが、結合律は成立する例（文字列の連結）"</span>)</a>
-<a class="sourceLine" id="cb15-14" data-line-number="14">    <span class="kw">val</span> strings = List(<span class="st">"abc"</span>,<span class="st">"def"</span>,<span class="st">"ghi"</span>,<span class="st">"jkl"</span>,<span class="st">"mno"</span>,<span class="st">"pqr"</span>,<span class="st">"stu"</span>,<span class="st">"vwx"</span>,<span class="st">"yz"</span>).<span class="fu">par</span></a>
-<a class="sourceLine" id="cb15-15" data-line-number="15">    <span class="fu">println</span>(f<span class="st">"${strings.reduce((s1: String, s2: String) =&gt; s1 ++ "</span> <span class="st">" ++ s2)}"</span>)</a></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb15-1" title="1">    <span class="co">// x + (y + z) == (x + y) + z</span></a>
+<a class="sourceLine" id="cb15-2" title="2">    <span class="fu">println</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">結合律が成立する演算に対しては結果は安定している"</span>)</a>
+<a class="sourceLine" id="cb15-3" title="3">    <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to <span class="dv">3</span>) <span class="fu">println</span>(plist.<span class="fu">reduce</span>((accu: Int, v: Int) =&gt; accu + v))</a>
+<a class="sourceLine" id="cb15-4" title="4">    <span class="co">// 結果: 500500, 500500, 500500</span></a>
+<a class="sourceLine" id="cb15-5" title="5"></a>
+<a class="sourceLine" id="cb15-6" title="6">    <span class="co">// x - (y - z) != (x - y) - z</span></a>
+<a class="sourceLine" id="cb15-7" title="7">    <span class="fu">println</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">結合律が成立しない演算だと結果は不確定"</span>)</a>
+<a class="sourceLine" id="cb15-8" title="8">    <span class="kw">for</span> (i &lt;- <span class="dv">1</span> to <span class="dv">3</span>) <span class="fu">println</span>(plist.<span class="fu">reduce</span>((accu: Int, v: Int) =&gt; accu - v))</a>
+<a class="sourceLine" id="cb15-9" title="9">    <span class="co">// 結果は滅茶苦茶： 0, -144890, 497564</span></a>
+<a class="sourceLine" id="cb15-10" title="10"></a>
+<a class="sourceLine" id="cb15-11" title="11">    <span class="co">// s1 ++ s2 != s2 ++ s1</span></a>
+<a class="sourceLine" id="cb15-12" title="12">    <span class="co">// s1 ++ (s2 ++ s3) == (s1 ++ s2) ++ s3</span></a>
+<a class="sourceLine" id="cb15-13" title="13">    <span class="fu">println</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">交換律は成立しないが、結合律は成立する例（文字列の連結）"</span>)</a>
+<a class="sourceLine" id="cb15-14" title="14">    <span class="kw">val</span> strings = List(<span class="st">"abc"</span>,<span class="st">"def"</span>,<span class="st">"ghi"</span>,<span class="st">"jkl"</span>,<span class="st">"mno"</span>,<span class="st">"pqr"</span>,<span class="st">"stu"</span>,<span class="st">"vwx"</span>,<span class="st">"yz"</span>).<span class="fu">par</span></a>
+<a class="sourceLine" id="cb15-15" title="15">    <span class="fu">println</span>(f<span class="st">"${strings.reduce((s1: String, s2: String) =&gt; s1 ++ "</span> <span class="st">" ++ s2)}"</span>)</a></code></pre></div>
 </section></section>
     </div>
   <div class="backgrounds"><div class="slide-background present" data-loaded="true" style="display: block;"><div class="slide-background-content"></div></div><div class="slide-background stack future" data-loaded="true" style="display: block;"><div class="slide-background-content"></div><div class="slide-background title-slide slide level1 present" data-loaded="true" style="display: block;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" data-loaded="true" style="display: block;"><div class="slide-background-content"></div></div></div><div class="slide-background stack future" data-loaded="true" style="display: block;"><div class="slide-background-content"></div><div class="slide-background title-slide slide level1 present" data-loaded="true" style="display: block;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div></div><div class="slide-background stack future" style="display: none;"><div class="slide-background-content"></div><div class="slide-background title-slide slide level1 present" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div></div></div><div class="progress" style="display: block;"><span style="width: 0px;"></span></div><aside class="controls" data-controls-layout="bottom-right" data-controls-back-arrows="faded" style="display: block;"><button class="navigate-left" aria-label="previous slide" disabled="disabled"><div class="controls-arrow"></div></button><button class="navigate-right enabled highlight" aria-label="next slide"><div class="controls-arrow"></div></button><button class="navigate-up" aria-label="above slide" disabled="disabled"><div class="controls-arrow"></div></button><button class="navigate-down" aria-label="below slide" disabled="disabled"><div class="controls-arrow"></div></button></aside><div class="slide-number" style="display: block;"><a href="#/"><span class="slide-number-a">1</span></a></div><div class="speaker-notes" data-prevent-swipe="" tabindex="0"></div><div class="pause-overlay"><button class="resume-button">Resume presentation</button></div><div id="aria-status-div" aria-live="polite" aria-atomic="true" style="position: absolute; height: 1px; width: 1px; overflow: hidden; clip: rect(1px 1px 1px 1px);">
-  PRG (11): 並行計算と並列実行
+  PRG (10): 並行計算と並列実行
   Ken Wakita (https://is-prg1b.github.io/lecture/)
-  2017.11.10
+  2018.11.9
 </div></div>
 
   <script src="/y18-prg1/lib/reveal.js/lib/js/head.min.js"></script>

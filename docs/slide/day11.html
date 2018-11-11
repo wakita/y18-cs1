@@ -1,0 +1,412 @@
+<!DOCTYPE html><html class="js no-mobile desktop no-ie safari safari538 y18-prg1-section tmp-section w-400 gt-240 gt-320 lt-480 lt-640 lt-768 lt-800 lt-1024 lt-1280 lt-1440 lt-1680 lt-1920 no-portrait landscape gradient rgba opacity textshadow multiplebgs boxshadow borderimage borderradius cssreflections csstransforms csstransitions touch no-retina no-fontface domloaded wf-sourcecodepro-i4-active wf-sourcecodepro-i7-active wf-sourcecodepro-n4-active wf-sourcecodepro-n7-active wf-active" id="day11-page"><head>
+  <meta charset="utf-8">
+  <meta name="generator" content="pandoc">
+  <meta name="author" content="Ken Wakita (https://is-prg1b.github.io/lecture/)">
+  <title>PRG (11): 並行計算と並列実行（Future計算）</title>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+  <link rel="stylesheet" href="/y18-prg1/lib/reveal.js/css/reveal.css">
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      .smallcaps{font-variant: small-caps;}
+      .line-block{white-space: pre-line;}
+  </style>
+  <style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="/y18-prg1/lib/reveal.js/css/theme/serif.css" id="theme">
+  <!-- Printing and PDF exports -->
+  <script>
+    var link = document.createElement( 'link' );
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    link.href = window.location.search.match( /print-pdf/gi ) ? '/y18-prg1/lib/reveal.js/css/print/pdf.css' : '/y18-prg1/lib/reveal.js/css/print/paper.css';
+    document.getElementsByTagName( 'head' )[0].appendChild( link );
+  </script><link rel="stylesheet" type="text/css" href="/y18-prg1/lib/reveal.js/css/print/paper.css">
+  <!--[if lt IE 9]>
+  <script src="/y18-prg1/lib/reveal.js/lib/js/html5shiv.js"></script>
+  <![endif]-->
+  <link rel="stylesheet" href="https://use.edgefonts.net/c/7d333d/1w;source-code-pro,2,gm0:W:i4,gm6:W:i7,glz:W:n4,gm5:W:n7/k/localhost" media="all"><script src="//use.edgefonts.net/source-code-pro.js"></script>
+  <link rel="stylesheet" type="text/css" href="/y18-prg1/lib/kw.css"><script type="text/javascript" src="/y18-prg1/lib/reveal.js/plugin/zoom-js/zoom.js"></script><script type="text/javascript" src="/y18-prg1/lib/reveal.js/plugin/math/math.js"></script><script type="text/javascript" src="/y18-prg1/lib/reveal.js/plugin/notes/notes.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS_HTML-full"></script><style type="text/css">.MathJax_Hover_Frame {border-radius: .25em; -webkit-border-radius: .25em; -moz-border-radius: .25em; -khtml-border-radius: .25em; box-shadow: 0px 0px 15px #83A; -webkit-box-shadow: 0px 0px 15px #83A; -moz-box-shadow: 0px 0px 15px #83A; -khtml-box-shadow: 0px 0px 15px #83A; border: 1px solid #A6D ! important; display: inline-block; position: absolute}
+.MathJax_Menu_Button .MathJax_Hover_Arrow {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 4px; -webkit-border-radius: 4px; -moz-border-radius: 4px; -khtml-border-radius: 4px; font-family: 'Courier New',Courier; font-size: 9px; color: #F0F0F0}
+.MathJax_Menu_Button .MathJax_Hover_Arrow span {display: block; background-color: #AAA; border: 1px solid; border-radius: 3px; line-height: 0; padding: 4px}
+.MathJax_Hover_Arrow:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_Hover_Arrow:hover span {background-color: #CCC!important}
+</style><style type="text/css">#MathJax_About {position: fixed; left: 50%; width: auto; text-align: center; border: 3px outset; padding: 1em 2em; background-color: #DDDDDD; color: black; cursor: default; font-family: message-box; font-size: 120%; font-style: normal; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 15px; -webkit-border-radius: 15px; -moz-border-radius: 15px; -khtml-border-radius: 15px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_About.MathJax_MousePost {outline: none}
+.MathJax_Menu {position: absolute; background-color: white; color: black; width: auto; padding: 5px 0px; border: 1px solid #CCCCCC; margin: 0; cursor: default; font: menu; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; z-index: 201; border-radius: 5px; -webkit-border-radius: 5px; -moz-border-radius: 5px; -khtml-border-radius: 5px; box-shadow: 0px 10px 20px #808080; -webkit-box-shadow: 0px 10px 20px #808080; -moz-box-shadow: 0px 10px 20px #808080; -khtml-box-shadow: 0px 10px 20px #808080; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+.MathJax_MenuItem {padding: 1px 2em; background: transparent}
+.MathJax_MenuArrow {position: absolute; right: .5em; padding-top: .25em; color: #666666; font-size: .75em}
+.MathJax_MenuActive .MathJax_MenuArrow {color: white}
+.MathJax_MenuArrow.RTL {left: .5em; right: auto}
+.MathJax_MenuCheck {position: absolute; left: .7em}
+.MathJax_MenuCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuRadioCheck {position: absolute; left: .7em}
+.MathJax_MenuRadioCheck.RTL {right: .7em; left: auto}
+.MathJax_MenuLabel {padding: 1px 2em 3px 1.33em; font-style: italic}
+.MathJax_MenuRule {border-top: 1px solid #DDDDDD; margin: 4px 3px}
+.MathJax_MenuDisabled {color: GrayText}
+.MathJax_MenuActive {background-color: #606872; color: white}
+.MathJax_MenuDisabled:focus, .MathJax_MenuLabel:focus {background-color: #E8E8E8}
+.MathJax_ContextMenu:focus {outline: none}
+.MathJax_ContextMenu .MathJax_MenuItem:focus {outline: none}
+#MathJax_AboutClose {top: .2em; right: .2em}
+.MathJax_Menu .MathJax_MenuClose {top: -10px; left: -10px}
+.MathJax_MenuClose {position: absolute; cursor: pointer; display: inline-block; border: 2px solid #AAA; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; font-family: 'Courier New',Courier; font-size: 24px; color: #F0F0F0}
+.MathJax_MenuClose span {display: block; background-color: #AAA; border: 1.5px solid; border-radius: 18px; -webkit-border-radius: 18px; -moz-border-radius: 18px; -khtml-border-radius: 18px; line-height: 0; padding: 8px 0 6px}
+.MathJax_MenuClose:hover {color: white!important; border: 2px solid #CCC!important}
+.MathJax_MenuClose:hover span {background-color: #CCC!important}
+.MathJax_MenuClose:hover:focus {outline: none}
+</style><style type="text/css">.MathJax_Preview .MJXf-math {color: inherit!important}
+</style><style type="text/css">.MJX_Assistive_MathML {position: absolute!important; top: 0; left: 0; clip: rect(1px, 1px, 1px, 1px); padding: 1px 0 0 0!important; border: 0!important; height: 1px!important; width: 1px!important; overflow: hidden!important; display: block!important; -webkit-touch-callout: none; -webkit-user-select: none; -khtml-user-select: none; -moz-user-select: none; -ms-user-select: none; user-select: none}
+.MJX_Assistive_MathML.MJX_Assistive_MathML_Block {width: 100%!important}
+</style><style type="text/css">#MathJax_Zoom {position: absolute; background-color: #F0F0F0; overflow: auto; display: block; z-index: 301; padding: .5em; border: 1px solid black; margin: 0; font-weight: normal; font-style: normal; text-align: left; text-indent: 0; text-transform: none; line-height: normal; letter-spacing: normal; word-spacing: normal; word-wrap: normal; white-space: nowrap; float: none; -webkit-box-sizing: content-box; -moz-box-sizing: content-box; box-sizing: content-box; box-shadow: 5px 5px 15px #AAAAAA; -webkit-box-shadow: 5px 5px 15px #AAAAAA; -moz-box-shadow: 5px 5px 15px #AAAAAA; -khtml-box-shadow: 5px 5px 15px #AAAAAA; filter: progid:DXImageTransform.Microsoft.dropshadow(OffX=2, OffY=2, Color='gray', Positive='true')}
+#MathJax_ZoomOverlay {position: absolute; left: 0; top: 0; z-index: 300; display: inline-block; width: 100%; height: 100%; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+#MathJax_ZoomFrame {position: relative; display: inline-block; height: 0; width: 0}
+#MathJax_ZoomEventTrap {position: absolute; left: 0; top: 0; z-index: 302; display: inline-block; border: 0; padding: 0; margin: 0; background-color: white; opacity: 0; filter: alpha(opacity=0)}
+</style><style type="text/css">.MathJax_Preview {color: #888}
+#MathJax_Message {position: fixed; left: 1px; bottom: 2px; background-color: #E6E6E6; border: 1px solid #959595; margin: 0px; padding: 2px 8px; z-index: 102; color: black; font-size: 80%; width: auto; white-space: nowrap}
+#MathJax_MSIE_Frame {position: absolute; top: 0; left: 0; width: 0px; z-index: 101; border: 0px; margin: 0px; padding: 0px}
+.MathJax_Error {color: #CC0000; font-style: italic}
+</style><script type="text/javascript" src="https://cdn.mathjax.org/mathjax/contrib/a11y/accessibility-menu.js?V=2.7.0"></script></head>
+<body style="-webkit-transition: -webkit-transform 0.8s ease; transition: -webkit-transform 0.8s ease;"><div id="MathJax_Message" style="display: none;"></div>
+  <div class="reveal slide center has-vertical-slides has-horizontal-slides ready" role="application" data-transition-speed="default" data-background-transition="fade">
+    <div class="slides" style="width: 1280px; height: 1024px; left: 50%; top: 50%; bottom: auto; right: auto; -webkit-transform: translate(-50%, -50%) scale(0.28125);">
+
+<section style="top: 138.5px; display: block;" class="present">
+  <h1 class="title">PRG (11): 並行計算と並列実行（Future計算）</h1>
+  <p class="author">Ken Wakita (<a href="https://is-prg1b.github.io/lecture/">https://is-prg1b.github.io/lecture/</a>)</p>
+  <p class="date">2018.11.12</p>
+</section>
+
+<section style="top: 0px; display: block;" hidden="" aria-hidden="true" class="stack future"><section id="前回の復習" class="title-slide slide level1" style="top: 391.5px; display: block;"><h1>前回の復習</h1></section><section id="future-計算" class="slide level2 future" aria-hidden="true" style="top: 211px; display: block;">
+<h2>Future 計算</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb1-1" title="1">Future {</a>
+<a class="sourceLine" id="cb1-2" title="2">  処理内容</a>
+<a class="sourceLine" id="cb1-3" title="3">  計算結果: T</a>
+<a class="sourceLine" id="cb1-4" title="4">} : Future[T]</a></code></pre></div>
+<ul>
+<li><p>Future オブジェクト：どこかで計算を実行し，いずれ計算が終わった暁には，その答えをくれるオブジェクト．</p></li>
+<li><p>計算結果の型が <code>T</code> のとき，Future オブジェクトの型は <code>Future[T]</code></p></li>
+</ul>
+<!-- - Future オブジェクトの `foreach` メソッドを介して，実行結果を入手する． -->
+</section><section id="future-計算の例" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>Future 計算の例</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb2-1" title="1"><span class="fu">f</span>()</a>
+<a class="sourceLine" id="cb2-2" title="2">Future { <span class="fu">g</span>() }</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="fu">h</span>()</a></code></pre></div>
+<ol type="1">
+<li><p><code>f()</code> を実行する．</p></li>
+<li><p><code>g()</code> を計算する　Future オブジェクトを生成する．</p>
+<p>計算資源に余裕がある場合は（つまり，暇なプロセッサがあるとき）Future オブジェクトはすぐに <code>g()</code> の計算を開始する．</p></li>
+<li><p>（Future オブジェクトの計算を待たずに）<code>h()</code> の計算を始める．</p>
+<p>計算資源に余裕があり，<code>g()</code>と<code>h()</code>の計算が重い場合はこれらの二つの計算は並列実行される．</p></li>
+</ol>
+</section></section>
+<section style="top: 0px; display: block;" hidden="" aria-hidden="true" class="stack future"><section id="同期と計算結果の受領" class="title-slide slide level1" style="top: 301px; display: block;"><h1>同期と計算結果の受領</h1></section><section id="同期と計算結果の受領-1" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>同期と計算結果の受領</h2>
+<div class="sourceCode" id="cb3"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb3-1" title="1">  (* project lx11; run future *)</a>
+<a class="sourceLine" id="cb3-2" title="2"></a>
+<a class="sourceLine" id="cb3-3" title="3">  <span class="kw">def</span> <span class="fu">future</span>(): Unit = {</a>
+<a class="sourceLine" id="cb3-4" title="4">    <span class="kw">val</span> s = <span class="st">"Hello"</span></a>
+<a class="sourceLine" id="cb3-5" title="5">    <span class="kw">val</span> f: Future[String] = Future { List(s, <span class="st">" future!"</span>).<span class="fu">reduce</span>((s1, s2) =&gt; s1 + s2) }</a>
+<a class="sourceLine" id="cb3-6" title="6"></a>
+<a class="sourceLine" id="cb3-7" title="7">    <span class="fu">println</span>(f<span class="st">"$s + ...: ${Await.result(f, Duration.Inf)}"</span>)</a>
+<a class="sourceLine" id="cb3-8" title="8">  }</a></code></pre></div>
+<ul>
+<li><p>Future <code>f</code> は文字列のリストを連結する．</p></li>
+<li><p><code>println</code> メソッド中の <code>Await.result(f, 最大待ち時間)</code> が Future との同期と値の授受を実施する．</p>
+<ol type="1">
+<li><p><code>Await.result(f, ...)</code>: <code>f</code> の計算を待つ</p></li>
+<li><p><code>Await.result(..., Duration.Inf)</code> 永遠に待ち続ける</p></li>
+<li><p><code>Await.result(...)</code> の結果は <code>f</code> の計算結果</p></li>
+</ol></li>
+</ul>
+</section></section>
+<section style="top: 512px; display: none;" hidden="" aria-hidden="true" class="stack future"><section id="future計算の合成" class="title-slide slide level1" style="top: 512px; display: none;"><h1>Future計算の合成</h1></section><section id="future計算の合成合成の目的" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>Future計算の合成：合成の目的</h2>
+<ul>
+<li><p>ふたつの Future (<code>f1</code> と <code>f2</code>) の並列実行を考える．</p></li>
+<li><p>最終的には <code>f1</code> と <code>f2</code> の計算結果を用いて計算したい．たとえば，分割統治法で大きな問題を複数の部分問題に分割したときに，それぞれの部分問題を Future として独立に並列計算し，それらの結果を合成して最終結果を得たい．</p></li>
+</ul>
+<aside class="notes"><ul>
+<li><p>上の例は AND 並列</p></li>
+<li><p>OR 並列はどうする？</p></li>
+</ul>
+</aside>
+</section><section id="future計算の合成方法" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>Future計算の合成方法</h2>
+<ul>
+<li><code>for { v1 &lt;- f1; ... } yield ...</code></li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb4-1" title="1">  project lx11; run add</a>
+<a class="sourceLine" id="cb4-2" title="2"></a>
+<a class="sourceLine" id="cb4-3" title="3">  <span class="kw">def</span> <span class="fu">add</span>() {</a>
+<a class="sourceLine" id="cb4-4" title="4">    <span class="kw">val</span> f1: Future[Int] = Future { <span class="dv">1</span> }</a>
+<a class="sourceLine" id="cb4-5" title="5">    <span class="kw">val</span> f2: Future[Int] = Future { <span class="dv">2</span> }</a>
+<a class="sourceLine" id="cb4-6" title="6"></a>
+<a class="sourceLine" id="cb4-7" title="7">    <span class="kw">val</span> sum: Future[Int] = <span class="kw">for</span> {</a>
+<a class="sourceLine" id="cb4-8" title="8">      v1 &lt;- f1</a>
+<a class="sourceLine" id="cb4-9" title="9">      v2 &lt;- f2</a>
+<a class="sourceLine" id="cb4-10" title="10">    } <span class="kw">yield</span> (v1 + v2)</a>
+<a class="sourceLine" id="cb4-11" title="11"></a>
+<a class="sourceLine" id="cb4-12" title="12">    <span class="fu">println</span>(f<span class="st">"1 + 2 = ${Await.result(sum, Duration.Inf)}"</span>)</a>
+<a class="sourceLine" id="cb4-13" title="13">  }</a></code></pre></div>
+<ul>
+<li><p><code>f1</code>, <code>f2</code> が Future のとき <code>for { v1 &lt;- f1; v2 &lt;- f2 } yield ...</code> によって，複数の Future との同期と値の受理を記述できる．</p></li>
+<li><p><code>yield ...</code> によって，<code>f1</code> と <code>f2</code> の結果を合成した Future の計算を表現する．<code>...</code> が合成した Future の計算の内容．</p></li>
+</ul>
+</section><section id="future計算の合成方法-zip" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>Future計算の合成方法 (zip)</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb5-1" title="1">  <span class="kw">def</span> <span class="fu">add_zip</span>() {</a>
+<a class="sourceLine" id="cb5-2" title="2">    <span class="kw">val</span> f1: Future[Int] = Future { <span class="dv">1</span> }</a>
+<a class="sourceLine" id="cb5-3" title="3">    <span class="kw">val</span> f2: Future[Int] = Future { <span class="dv">2</span> }</a>
+<a class="sourceLine" id="cb5-4" title="4"></a>
+<a class="sourceLine" id="cb5-5" title="5">    <span class="kw">val</span> (v1, v2) = Await.<span class="fu">result</span>(f1.<span class="fu">zip</span>(f2), Duration.<span class="fu">Inf</span>)</a>
+<a class="sourceLine" id="cb5-6" title="6"></a>
+<a class="sourceLine" id="cb5-7" title="7">    <span class="fu">println</span>(f<span class="st">"1 + 2 = ${v1 + v2}"</span>)</a>
+<a class="sourceLine" id="cb5-8" title="8">  }</a></code></pre></div>
+<ul>
+<li><p><code>Future[T]::zip[U](that: Future[U]): Future[(T, U)]</code></p>
+<ul>
+<li><p><code>f1:Future[T]</code>, <code>f2:Future[U]</code> のとき，<code>f1.zip(f2)</code> は <code>Future[(T, U)]</code> を返す．</p></li>
+<li><p>つまり，ふたつの Future の計算結果（それぞれの型は T, U）から，それらの組（型は (T, U)）を計算するFutureを返す．</p></li>
+</ul></li>
+<li><p><code>Await.result(f1.zip(f2), ...)</code> は <code>zip</code> で合成した Future の計算を待って，<code>f1</code>, <code>f2</code> の結果の組を得る。</p></li>
+</ul>
+</section></section>
+<section style="top: 512px; display: none;" hidden="" aria-hidden="true" class="stack future"><section id="futureとの通信" class="title-slide slide level1" style="top: 512px; display: none;"><h1>Futureとの通信</h1></section><section id="promise" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>Promise</h2>
+<ul>
+<li><p><code>Promise[T]</code> は <code>Future[T]</code> 型の Future オブジェクトの計算結果を保持するオブジェクト．</p>
+<p>Future にくっついている覗き穴のようなもの</p></li>
+<li><p>Future が未了なら Promise の値は未了 (<code>p.isComplete == false</code>)</p></li>
+<li><p>Future が正常終了してたら Promise の値は <code>Success[T]</code></p></li>
+<li><p>Future が以上終了してたら Promise の値は <code>Failure[T]</code></p></li>
+<li><p>Promise <code>p</code> が割り当てられている Future は <code>p.future</code></p></li>
+<li><p>Future が Promise に値を通知する方法は <code>p success 計算結果</code></p></li>
+</ul>
+</section><section id="promise-の利用例" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>Promise の利用例</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb6-1" title="1">  <span class="co">// project lx11; run promise</span></a>
+<a class="sourceLine" id="cb6-2" title="2"></a>
+<a class="sourceLine" id="cb6-3" title="3">  <span class="kw">def</span> <span class="fu">promise</span>(): Unit = {</a>
+<a class="sourceLine" id="cb6-4" title="4">    <span class="kw">val</span> s = <span class="st">"Hello"</span></a>
+<a class="sourceLine" id="cb6-5" title="5"></a>
+<a class="sourceLine" id="cb6-6" title="6">    <span class="kw">val</span> p = Promise[String]()</a>
+<a class="sourceLine" id="cb6-7" title="7">    Future { p success List(s, <span class="st">" future!"</span>).<span class="fu">reduce</span>((s1, s2) =&gt; s1 + s2) }</a>
+<a class="sourceLine" id="cb6-8" title="8"></a>
+<a class="sourceLine" id="cb6-9" title="9">    <span class="fu">println</span>(f<span class="st">"Value from promise: ${Await.result(p.future, Duration.Inf)}"</span>)</a>
+<a class="sourceLine" id="cb6-10" title="10">  }</a></code></pre></div>
+<ul>
+<li><p>Promise <code>p</code> を作成</p></li>
+<li><p>Future を作成し，計算 (<code>List(...).reduce(...)</code>) の結果を <code>p success ...</code> でPromiseに通知</p></li>
+<li><p><code>Await.result(p.future, ...)</code> により，Promise <code>p</code> に結びついた Future と同期</p></li>
+<li>一見、無駄に Promise を使っているように見えるが，Future に一体化された計算と通信を分離することで柔軟性を増している．
+<ul>
+<li>Future での計算</li>
+<li>Promise が表す通信路</li>
+</ul></li>
+</ul>
+</section><section id="promiseを用いたfutureの合成例" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>Promiseを用いたFutureの合成例</h2>
+<div class="sourceCode" id="cb7"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb7-1" title="1">  <span class="kw">def</span> <span class="fu">add_promise</span>() {</a>
+<a class="sourceLine" id="cb7-2" title="2">    <span class="kw">def</span> <span class="fu">zip</span>(p1: Promise[Int], p2: Promise[Int]): Future[Int] = {</a>
+<a class="sourceLine" id="cb7-3" title="3">      <span class="kw">for</span> {</a>
+<a class="sourceLine" id="cb7-4" title="4">        v1 &lt;- p1.<span class="fu">future</span></a>
+<a class="sourceLine" id="cb7-5" title="5">        v2 &lt;- p2.<span class="fu">future</span></a>
+<a class="sourceLine" id="cb7-6" title="6">      } <span class="kw">yield</span> (v1 + v2)</a>
+<a class="sourceLine" id="cb7-7" title="7">    }</a></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb8-1" title="1">    <span class="kw">val</span> p1 = Promise[Int]()</a>
+<a class="sourceLine" id="cb8-2" title="2">    Future { p1 success <span class="dv">1</span> }</a>
+<a class="sourceLine" id="cb8-3" title="3"></a>
+<a class="sourceLine" id="cb8-4" title="4">    <span class="kw">val</span> p2 = Promise[Int]()</a>
+<a class="sourceLine" id="cb8-5" title="5">    Future { p2 success <span class="dv">2</span> }</a>
+<a class="sourceLine" id="cb8-6" title="6"></a>
+<a class="sourceLine" id="cb8-7" title="7">    <span class="fu">println</span>(f<span class="st">"1 + 2 = ${Await.result(zip(p1, p2), Duration.Inf)}"</span>)</a>
+<a class="sourceLine" id="cb8-8" title="8">  }</a></code></pre></div>
+</section></section>
+<section style="top: 512px; display: none;" hidden="" aria-hidden="true" class="stack future"><section id="並列-fibonacci-計算" class="title-slide slide level1" style="top: 512px; display: none;"><h1>並列 Fibonacci 計算</h1></section><section id="再帰的-fibonacci-計算" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>再帰的 Fibonacci 計算</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb9-1" title="1">  <span class="kw">object</span> recursive <span class="kw">extends</span> Fibonacci {</a>
+<a class="sourceLine" id="cb9-2" title="2">    <span class="kw">def</span> <span class="fu">fib</span>(n: Int): Int = {</a>
+<a class="sourceLine" id="cb9-3" title="3">      <span class="kw">if</span> (n &lt;= <span class="dv">1</span>) <span class="dv">1</span></a>
+<a class="sourceLine" id="cb9-4" title="4">      <span class="kw">else</span> <span class="fu">fib</span>(n<span class="dv">-2</span>) + <span class="fu">fib</span>(n<span class="dv">-1</span>)</a>
+<a class="sourceLine" id="cb9-5" title="5">    }</a>
+<a class="sourceLine" id="cb9-6" title="6">  }</a></code></pre></div>
+</section><section id="再帰的-fibonacci-計算の解剖" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>再帰的 Fibonacci 計算の解剖</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb10-1" title="1">  <span class="kw">object</span> recursive <span class="kw">extends</span> Fibonacci {</a>
+<a class="sourceLine" id="cb10-2" title="2">    <span class="kw">def</span> <span class="fu">fib</span>(n: Int): Int = {</a>
+<a class="sourceLine" id="cb10-3" title="3">      <span class="kw">if</span> (n &lt;= <span class="dv">1</span>) <span class="dv">1</span></a>
+<a class="sourceLine" id="cb10-4" title="4">      <span class="kw">else</span> <span class="fu">fib</span>(n<span class="dv">-2</span>) + <span class="fu">fib</span>(n<span class="dv">-1</span>)</a>
+<a class="sourceLine" id="cb10-5" title="5">    }</a>
+<a class="sourceLine" id="cb10-6" title="6">  }</a></code></pre></div>
+<ol type="1">
+<li><p><code>n &lt;= 1</code> ならば 1 を返す．</p></li>
+<li>そうでなければ，
+<ol type="1">
+<li><code>fib(n - 2)</code> を計算する</li>
+<li><code>fib(n - 2)</code> の計算結果を受け取り，覚えておく(<code>v1</code>)．</li>
+<li><code>fib(n - 1)</code> を計算する</li>
+<li><code>fib(n - 1)</code> の計算結果を受け取り，覚えておく(<code>v2</code>)．</li>
+<li><code>v1</code> と <code>v2</code> の和を計算する．（<code>sum</code>）</li>
+<li><code>sum</code> を返す．</li>
+</ol></li>
+</ol>
+</section><section id="再帰的-fibonacci-計算の解剖のちょっと不明な点" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>再帰的 Fibonacci 計算の解剖のちょっと不明な点</h2>
+<ol type="1">
+<li><p><code>n &lt;= 1</code> ならば 1 を返す．（<strong>誰に？</strong>）</p></li>
+<li><p>そうでなければ，</p>
+<ol type="1">
+<li><p><code>fib(n - 2)</code> を計算する</p></li>
+<li><p><code>fib(n - 2)</code> の計算結果を受け取り，覚えておく．（<code>v1</code>）</p></li>
+<li><p><code>fib(n - 1)</code> を計算する</p></li>
+<li><p><code>fib(n - 1)</code> の計算結果を受け取り，覚えておく．（<code>v2</code>）</p></li>
+<li><p><code>v1</code> と <code>v2</code> の和を計算し，覚えておく．（<code>sum</code>）</p></li>
+<li><p><code>sum</code> を返す．（<strong>誰に？</strong>）</p></li>
+</ol></li>
+</ol>
+</section><section id="並列-fibonacci-のアイデア" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>並列 Fibonacci のアイデア</h2>
+<ul>
+<li><p>誰に →「計算結果を渡す相手」を明示</p></li>
+<li><p>「計算結果を渡す相手」を Promise で表現</p></li>
+</ul>
+</section><section id="並列-fibonacci-sum" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>並列 Fibonacci (sum)</h2>
+<div class="sourceCode" id="cb11"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb11-1" title="1">    <span class="co">// 計算の引数を受け取る相手 promise1, promise2</span></a>
+<a class="sourceLine" id="cb11-2" title="2">    <span class="co">// `promise1` と `promise2` はそれぞれ fib(n-1), fib(n-2) を計算</span></a>
+<a class="sourceLine" id="cb11-3" title="3">    <span class="co">// 計算結果を渡す相手は `promise_sum`</span></a>
+<a class="sourceLine" id="cb11-4" title="4">    <span class="co">// 入力 Promise の計算結果を収集したら promise_sum に合計値を伝える。</span></a>
+<a class="sourceLine" id="cb11-5" title="5">    <span class="kw">def</span> <span class="fu">sum</span>(promise1: Promise[Int], promise2: Promise[Int], promise_sum: Promise[Int]) = {</a>
+<a class="sourceLine" id="cb11-6" title="6">      <span class="kw">val</span> (v1, v2) = Await.<span class="fu">result</span>(promise1.<span class="fu">future</span>.<span class="fu">zip</span>(promise2.<span class="fu">future</span>), Duration.<span class="fu">Inf</span>)</a>
+<a class="sourceLine" id="cb11-7" title="7">      promise_sum <span class="fu">success</span> (v1 + v2)</a>
+<a class="sourceLine" id="cb11-8" title="8">    }</a></code></pre></div>
+<ul>
+<li>説明は板書の図</li>
+</ul>
+</section><section id="並列-fibonacci-fib" class="slide level2 future" aria-hidden="true" style="top: 512px; display: none;">
+<h2>並列 Fibonacci (fib)</h2>
+<div class="sourceCode" id="cb12"><pre class="sourceCode scala"><code class="sourceCode scala"><a class="sourceLine" id="cb12-1" title="1">    <span class="co">// Fibonacci(n)を計算した結果を p に伝える</span></a>
+<a class="sourceLine" id="cb12-2" title="2">    <span class="kw">def</span> <span class="fu">fib</span>(n: Int, p: Promise[Int]) {</a>
+<a class="sourceLine" id="cb12-3" title="3">      <span class="kw">if</span> (n &lt;= <span class="dv">1</span>) p success <span class="dv">1</span></a>
+<a class="sourceLine" id="cb12-4" title="4">      <span class="kw">else</span> {</a>
+<a class="sourceLine" id="cb12-5" title="5">        <span class="co">// fib(n-1), fib(n-2)を計算するFutureとPromise</span></a>
+<a class="sourceLine" id="cb12-6" title="6">        <span class="kw">val</span> promise1 = Promise[Int]() <span class="co">// fib(n-1) の結果を納める Promise</span></a>
+<a class="sourceLine" id="cb12-7" title="7">        <span class="kw">val</span> promise2 = Promise[Int]() <span class="co">// fib(n-2) の結果を納める Promise</span></a>
+<a class="sourceLine" id="cb12-8" title="8">        Future { <span class="fu">fib</span>(n<span class="dv">-1</span>, promise1) }</a>
+<a class="sourceLine" id="cb12-9" title="9">        Future { <span class="fu">fib</span>(n<span class="dv">-2</span>, promise2) }</a>
+<a class="sourceLine" id="cb12-10" title="10"></a>
+<a class="sourceLine" id="cb12-11" title="11">        <span class="co">// fibを計算するFutureたちから結果を受け取りその和をpで待つFutureに伝えるFuture</span></a>
+<a class="sourceLine" id="cb12-12" title="12">        <span class="fu">sum</span>(promise1, promise2, p)</a>
+<a class="sourceLine" id="cb12-13" title="13">      }</a>
+<a class="sourceLine" id="cb12-14" title="14">    }</a></code></pre></div>
+<ul>
+<li>説明は板書の図</li>
+</ul>
+</section></section>
+    </div>
+  <div class="backgrounds"><div class="slide-background present" data-loaded="true" style="display: block;"><div class="slide-background-content"></div></div><div class="slide-background stack future" data-loaded="true" style="display: block;"><div class="slide-background-content"></div><div class="slide-background title-slide slide level1 present" data-loaded="true" style="display: block;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" data-loaded="true" style="display: block;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div></div><div class="slide-background stack future" data-loaded="true" style="display: block;"><div class="slide-background-content"></div><div class="slide-background title-slide slide level1 present" data-loaded="true" style="display: block;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div></div><div class="slide-background stack future" style="display: none;"><div class="slide-background-content"></div><div class="slide-background title-slide slide level1 present" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div></div><div class="slide-background stack future" style="display: none;"><div class="slide-background-content"></div><div class="slide-background title-slide slide level1 present" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div></div><div class="slide-background stack future" style="display: none;"><div class="slide-background-content"></div><div class="slide-background title-slide slide level1 present" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div><div class="slide-background slide level2 future" style="display: none;"><div class="slide-background-content"></div></div></div></div><div class="progress" style="display: block;"><span style="width: 0px;"></span></div><aside class="controls" data-controls-layout="bottom-right" data-controls-back-arrows="faded" style="display: block;"><button class="navigate-left" aria-label="previous slide" disabled="disabled"><div class="controls-arrow"></div></button><button class="navigate-right enabled highlight" aria-label="next slide"><div class="controls-arrow"></div></button><button class="navigate-up" aria-label="above slide" disabled="disabled"><div class="controls-arrow"></div></button><button class="navigate-down" aria-label="below slide" disabled="disabled"><div class="controls-arrow"></div></button></aside><div class="slide-number" style="display: block;"><a href="#/"><span class="slide-number-a">1</span></a></div><div class="speaker-notes" data-prevent-swipe="" tabindex="0"></div><div class="pause-overlay"><button class="resume-button">Resume presentation</button></div><div id="aria-status-div" aria-live="polite" aria-atomic="true" style="position: absolute; height: 1px; width: 1px; overflow: hidden; clip: rect(1px 1px 1px 1px);">
+  PRG (11): 並行計算と並列実行（Future計算）
+  Ken Wakita (https://is-prg1b.github.io/lecture/)
+  2018.11.12
+</div></div>
+
+  <script src="/y18-prg1/lib/reveal.js/lib/js/head.min.js"></script>
+  <script src="/y18-prg1/lib/reveal.js/js/reveal.js"></script>
+
+  <script>
+
+      // Full list of configuration options available at:
+      // https://github.com/hakimel/reveal.js#configuration
+      Reveal.initialize({
+        // Display the page number of the current slide
+        slideNumber: true,
+        // Push each slide change to the browser history
+        history: false,
+        // The "normal" size of the presentation, aspect ratio will be preserved
+        // when the presentation is scaled to fit different resolutions. Can be
+        // specified using percentage units.
+        width: 1280,
+        height: 1024,
+        math: {
+          mathjax: 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js',
+          config: 'TeX-AMS_HTML-full',
+        },
+
+        // Optional reveal.js plugins
+        dependencies: [
+          { src: '/y18-prg1/lib/reveal.js/lib/js/classList.js', condition: function() { return !document.body.classList; } },
+          { src: '/y18-prg1/lib/reveal.js/plugin/zoom-js/zoom.js', async: true },
+          { src: '/y18-prg1/lib/reveal.js/plugin/math/math.js', async: true },
+          { src: '/y18-prg1/lib/reveal.js/plugin/notes/notes.js', async: true }
+        ]
+      });
+    </script>
+    
+
+</body></html>

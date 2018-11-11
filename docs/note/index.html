@@ -15,7 +15,7 @@
   <style type="text/css">
 a.sourceLine { display: inline-block; line-height: 1.25; }
 a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
-a.sourceLine:empty { height: 1.2em; position: absolute; }
+a.sourceLine:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
 code.sourceCode { white-space: pre; position: relative; }
 div.sourceCode { margin: 1em 0; }
@@ -28,13 +28,11 @@ code.sourceCode { white-space: pre-wrap; }
 a.sourceLine { text-indent: -1em; padding-left: 1em; }
 }
 pre.numberSource a.sourceLine
-  { position: relative; }
-pre.numberSource a.sourceLine:empty
-  { position: absolute; }
+  { position: relative; left: -4em; }
 pre.numberSource a.sourceLine::before
   { content: attr(data-line-number);
-    position: absolute; left: -5em; text-align: right; vertical-align: baseline;
-    border: none; pointer-events: all;
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
     -webkit-touch-callout: none; -webkit-user-select: none;
     -khtml-user-select: none; -moz-user-select: none;
     -ms-user-select: none; user-select: none;
@@ -87,9 +85,9 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
   <link rel="stylesheet" type="text/css" href="/y18-prg1/lib/kw.css">
 </head>
 <body>
-<header>
+<header id="title-block-header">
 <h1 class="title">プログラミング第一</h1>
-<p class="author">Ken Wakita (<a href="https://wakita.github.io/y18-prg1/" class="uri">https://wakita.github.io/y18-prg1/</a>)</p>
+<p class="author">Ken Wakita (<a href="https://wakita.github.io/y18-prg1/">https://wakita.github.io/y18-prg1/</a>)</p>
 </header>
 <ul>
 <li><p><a href="/y18-prg1/note/">トップページへ</a></p></li>
@@ -116,23 +114,8 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li><p>11月2日 — <a href="https://github.com/wakita/y18-prg1/raw/master/slide/day08.pdf">講義資料</a> / <a href="/y18-prg1/note/day08.html">参考資料</a> / サンプルコード (sbt project: <code>lx08</code>)</p></li>
 <li><p>11月5日 — サンプルコード (sbt project: <code>lx09</code>)</p></li>
 <li><p>11月9日 — <a href="/y18-prg1/slide/day10.html">講義資料</a> / サンプルコード (sbt project: <code>lx10</code>)</p></li>
+<li><p>11月12日 — <a href="/y18-prg1/slide/day11.html">講義資料</a> / サンプルコード (sbt project: <code>lx11</code>)</p></li>
 </ul>
-<!--
-
-- 10月20日 --- [講義資料](https://github.com/wakita/y18-prg1/raw/master/slide/day06.pdf) / サンプルコード (sbt project: `lx06`)
-
-- 10月24日 --- [講義資料](https://github.com/wakita/y18-prg1/raw/master/slide/day07.pdf) / サンプルコード (sbt project: `lx07`)
-
-- 10月27日 --- [講義資料](/slide/day08.html) / サンプルコード (sbt project: `lx08`)
-
-- 11月3日 --- [講義資料](https://github.com/wakita/y18-prg1/raw/master/slide/day09.pdf) / サンプルコード (sbt project: `lx09`)
-
-- 11月7日 --- [講義資料](/slide/day10.html) / サンプルコード (sbt project: `lx09`)
-
-- 11月10日 --- [講義資料](/slide/day11.html) / サンプルコード (sbt project: `lx11`)
-
-- 11月14日 --- [講義資料](/slide/day12.html) / サンプルコード (sbt project: `lx12`)
--->
 <h1 id="講義内容についての質問など">講義内容についての質問など</h1>
 <p><a href="https://github.com/wakita/y18-prg1/issues/new">質問，疑問等の受け付け先</a>．受け付けた質問は教員，TA，履修生で共有されます．これ以外の人々には公開されません．</p>
 <p>少ないスタッフで大勢を教育する都合上，質問，疑問，それへの対応は可能な限り共有する方針としています．羞恥心などの理由から授業や課題に直接関連する質問を<strong>メールで送付しないで</strong>下さい．以下に issue で対応したい問い合わせ例を示します．</p>
