@@ -244,7 +244,7 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <p>Future にくっついている覗き穴のようなもの</p></li>
 <li><p>Future が未了なら Promise の値は未了 (<code>p.isComplete == false</code>)</p></li>
 <li><p>Future が正常終了してたら Promise の値は <code>Success[T]</code></p></li>
-<li><p>Future が以上終了してたら Promise の値は <code>Failure[T]</code></p></li>
+<li><p>Future が異常終了してたら Promise の値は <code>Failure[T]</code></p></li>
 <li><p>Promise <code>p</code> が割り当てられている Future は <code>p.future</code></p></li>
 <li><p>Future が Promise に値を通知する方法は <code>p success 計算結果</code></p></li>
 </ul>
